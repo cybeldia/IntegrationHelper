@@ -5,6 +5,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import net.miginfocom.swing.MigLayout;
+import net.proteanit.sql.DbUtils;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JScrollPane;
@@ -35,8 +37,11 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import java.awt.Font;
 import javax.swing.JTable;
@@ -51,7 +56,7 @@ public class MainApp {
 	private static MainApp window;
 	private static JComboBox<String> payrollComboBox;
 	private static EmployeeOptions employeeOptions;
-	private JTextField serverXmlTextField;
+	private static JTextField serverXmlTextField;
 	private JTable table;
 
 	/**
@@ -196,6 +201,18 @@ public class MainApp {
 		panel_2.add(lblPleaseSelectThe, "cell 0 0");
 		
 		JButton btnChooseFile_1 = new JButton("Choose File:");
+		btnChooseFile_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+
+				int returnVal = chooser.showOpenDialog(null);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					String pickedFile = chooser.getSelectedFile().getPath();
+					serverXmlTextField.setText(pickedFile);
+				}
+			}
+		});
 		panel_2.add(btnChooseFile_1, "flowx,cell 0 1");
 		
 		serverXmlTextField = new JTextField();
@@ -203,6 +220,22 @@ public class MainApp {
 		serverXmlTextField.setColumns(10);
 		
 		JButton btnTestDatabaseConnection = new JButton("Test Database Connection");
+		btnTestDatabaseConnection.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					XMLToDBConnection connection = new XMLToDBConnection();
+					CurrentMapping cm = new CurrentMapping();
+					Connection conn = connection.DBConnection(MainApp.this);
+					table.setModel(DbUtils.resultSetToTableModel(cm.GetCurrentMapping(conn)));
+					conn.close();
+					JOptionPane.showMessageDialog(null, "Connection successful");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Connection unsuccessful");
+					e.printStackTrace();
+				}
+			}
+		});
 		panel_2.add(btnTestDatabaseConnection, "cell 1 1");
 		
 		JSeparator separator_1 = new JSeparator();
@@ -212,29 +245,25 @@ public class MainApp {
 		panel_2.add(scrollPane, "cell 0 3 2 1,grow");
 		
 		table = new JTable();
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"New column", "New column", "New column", "New column", "New column", "New column", "New column", "New column"
 			}
 		));
 		scrollPane.setViewportView(table);
 		
-		JButton btnPopulateTable = new JButton("Populate Table");
+		JButton btnPopulateTable = new JButton("Populate Payroll Defaults");
+		btnPopulateTable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(MainApp.payrollComboBox.getSelectedItem().toString().equals("InCode")) {
+					PayrollDefaults pd = new PayrollDefaults();
+					pd.setInCodeDefaults(table);
+					table.repaint();
+				}
+			}
+		});
 		panel_2.add(btnPopulateTable, "cell 0 4");
 		
 		JButton btnExecute = new JButton("Execute");
@@ -261,6 +290,10 @@ public class MainApp {
 
 	public String getFile() {
 		return MainApp.fileText.getText();
+	}
+	
+	public String getServerFile() {
+		return MainApp.serverXmlTextField.getText();
 	}
 	
 	public EmployeeOptions getEmployeeOptions() {
