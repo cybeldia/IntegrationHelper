@@ -267,6 +267,20 @@ public class MainApp {
 		panel_2.add(btnPopulateTable, "cell 0 4");
 		
 		JButton btnExecute = new JButton("Execute");
+		btnExecute.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+				XMLToDBConnection connection = new XMLToDBConnection();
+				Connection conn = connection.DBConnection(MainApp.this);
+				QueryExecuter executer = new QueryExecuter();
+				executer.QueryExecuter(table, conn);
+				conn.close();
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		panel_2.add(btnExecute, "cell 1 4,alignx right");
 
 		JButton btnProcess = new JButton("Process");

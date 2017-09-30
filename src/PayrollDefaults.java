@@ -4,10 +4,13 @@ import javax.swing.table.TableModel;
 
 public class PayrollDefaults {
 	
-	public JTable setInCodeDefaults(JTable tm) {
+	public JTable setInCodeDefaults(JTable tbl) {
 		
-		tm.setValueAt("Test", 1, 1);
-		return tm;
+		if (!(tbl.getRowCount() > 0) && (tbl.getColumnCount() > 0))
+		{
+			tbl.setValueAt("Test", 1, 1);
+		}
+		return tbl;
 	}
 
 }
