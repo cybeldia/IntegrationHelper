@@ -47,6 +47,7 @@ import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 
 public class MainApp {
 
@@ -107,37 +108,66 @@ public class MainApp {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frmIntegrationAssistant.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-		JPanel panel = new JPanel();
-		tabbedPane.addTab("Settings", null, panel, null);
-		panel.setLayout(new MigLayout("", "[28px][][][][grow][][][][]", "[][][20px][][][]"));
-
 		MainApp.payrollComboBox = new JComboBox<String>();
 		payrollComboBox
-		.setModel(new DefaultComboBoxModel<String>(new String[] { "InCode", "Generic", "Munis", "Etc." }));
-		panel.add(payrollComboBox, "cell 1 0,alignx left,aligny top");
+		.setModel(new DefaultComboBoxModel<String>(new String[] { "InCode", "Generic"}));
 		
-				JLabel lblPayrollSystem = new JLabel("Payroll System:");
-				lblPayrollSystem.setFont(new Font("Tahoma", Font.PLAIN, 14));
-				panel.add(lblPayrollSystem, "cell 0 0,alignx left");
-		
-				JLabel lblFileType = new JLabel("File Type:");
-				lblFileType.setFont(new Font("Tahoma", Font.PLAIN, 14));
-				panel.add(lblFileType, "cell 0 1,alignx left");
-		
-				JComboBox<String> comboBox_1 = new JComboBox<String>();
-				comboBox_1.setModel(new DefaultComboBoxModel<String>(new String[] { "Employee", "Benefit", "Accounts" }));
-				panel.add(comboBox_1, "cell 1 1,alignx left");
-		
-		JLabel lblExecutimeVersion = new JLabel("ExecuTime Version:");
-		lblExecutimeVersion.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblExecutimeVersion, "cell 0 2,alignx trailing");
-		
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"4.x", "5.x"}));
-		panel.add(comboBox, "cell 1 2,alignx left");
-		
-		JSeparator separator_2 = new JSeparator();
-		panel.add(separator_2, "cell 0 3 9 1");
+				JPanel panel = new JPanel();
+				tabbedPane.addTab("Settings", null, panel, null);
+				panel.setLayout(new MigLayout("", "[28px][][][][grow][][][][]", "[][][][20px][][][][][][][][]"));
+				panel.add(payrollComboBox, "cell 1 3,alignx left,aligny top");
+						
+						JLabel lblGeneral = new JLabel("General:");
+						lblGeneral.setFont(new Font("Tahoma", Font.BOLD, 14));
+						panel.add(lblGeneral, "cell 0 0");
+				
+						JLabel lblPayrollSystem = new JLabel("Payroll System:");
+						lblPayrollSystem.setFont(new Font("Tahoma", Font.PLAIN, 14));
+						panel.add(lblPayrollSystem, "cell 0 3,alignx left");
+						
+						JSeparator separator_2 = new JSeparator();
+						panel.add(separator_2, "cell 0 4 9 1");
+						
+								JLabel lblFileType = new JLabel("File Type:");
+								lblFileType.setFont(new Font("Tahoma", Font.PLAIN, 14));
+								panel.add(lblFileType, "cell 0 5,alignx left");
+								
+										JComboBox<String> comboBox_1 = new JComboBox<String>();
+										comboBox_1.setModel(new DefaultComboBoxModel<String>(new String[] { "Employee", "Benefit", "Accounts" }));
+										panel.add(comboBox_1, "cell 1 5,alignx left");
+										
+										JLabel lblExecutimeVersion = new JLabel("ExecuTime Version:");
+										lblExecutimeVersion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+										panel.add(lblExecutimeVersion, "cell 0 6,alignx left");
+										
+										JComboBox<String> comboBox = new JComboBox<String>();
+										comboBox.setModel(new DefaultComboBoxModel(new String[] {"4.x", "5.x"}));
+										panel.add(comboBox, "cell 1 6,alignx left");
+										
+										JLabel lblDatabaseConfigSettings = new JLabel("Database Config Settings:");
+										lblDatabaseConfigSettings.setFont(new Font("Tahoma", Font.BOLD, 14));
+										panel.add(lblDatabaseConfigSettings, "cell 0 8");
+										
+										JLabel lblCreateScheduledJobs = new JLabel("Create scheduled jobs");
+										lblCreateScheduledJobs.setFont(new Font("Tahoma", Font.PLAIN, 14));
+										panel.add(lblCreateScheduledJobs, "cell 0 9");
+										
+										JCheckBox chckbxNewCheckBox = new JCheckBox("");
+										panel.add(chckbxNewCheckBox, "cell 1 9");
+										
+										JLabel lblSetupDefaultDepartments = new JLabel("Setup default departments");
+										lblSetupDefaultDepartments.setFont(new Font("Tahoma", Font.PLAIN, 14));
+										panel.add(lblSetupDefaultDepartments, "cell 0 10");
+										
+										JCheckBox chckbxNewCheckBox_1 = new JCheckBox("");
+										panel.add(chckbxNewCheckBox_1, "cell 1 10");
+										
+										JLabel lblSetupDefaultLocations = new JLabel("Setup default Locations");
+										lblSetupDefaultLocations.setFont(new Font("Tahoma", Font.PLAIN, 14));
+										panel.add(lblSetupDefaultLocations, "cell 0 11");
+										
+										JCheckBox chckbxNewCheckBox_2 = new JCheckBox("");
+										panel.add(chckbxNewCheckBox_2, "cell 1 11");
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Flat File Helper", null, panel_1, null);
@@ -145,7 +175,7 @@ public class MainApp {
 		
 		MainApp.employeeOptions = new EmployeeOptions();
 		
-		JButton btnEmployeeCheckerSettings = new JButton("Employee Checker Settings");
+		JButton btnEmployeeCheckerSettings = new JButton("Fields to validate");
 		btnEmployeeCheckerSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MainApp.employeeOptions.setVisible(true);
