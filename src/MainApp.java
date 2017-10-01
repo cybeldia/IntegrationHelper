@@ -59,6 +59,7 @@ public class MainApp {
 	private static EmployeeOptions employeeOptions;
 	private static JTextField serverXmlTextField;
 	private JTable table;
+	private JCheckBox scheduledJobsCheckBox;
 
 	/**
 	 * Launch the application.
@@ -114,7 +115,7 @@ public class MainApp {
 		
 				JPanel panel = new JPanel();
 				tabbedPane.addTab("Settings", null, panel, null);
-				panel.setLayout(new MigLayout("", "[28px][][][][grow][][][][]", "[][][][20px][][][][][][][][]"));
+				panel.setLayout(new MigLayout("", "[28px][][][][grow][][][][]", "[][][][20px][][][][][][][][][]"));
 				panel.add(payrollComboBox, "cell 1 3,alignx left,aligny top");
 						
 						JLabel lblGeneral = new JLabel("General:");
@@ -152,22 +153,29 @@ public class MainApp {
 										lblCreateScheduledJobs.setFont(new Font("Tahoma", Font.PLAIN, 14));
 										panel.add(lblCreateScheduledJobs, "cell 0 9");
 										
-										JCheckBox chckbxNewCheckBox = new JCheckBox("");
-										panel.add(chckbxNewCheckBox, "cell 1 9");
+										JCheckBox scheduledJobsCheckBox = new JCheckBox("");
+										panel.add(scheduledJobsCheckBox, "cell 1 9");
 										
 										JLabel lblSetupDefaultDepartments = new JLabel("Setup default departments");
 										lblSetupDefaultDepartments.setFont(new Font("Tahoma", Font.PLAIN, 14));
 										panel.add(lblSetupDefaultDepartments, "cell 0 10");
 										
-										JCheckBox chckbxNewCheckBox_1 = new JCheckBox("");
-										panel.add(chckbxNewCheckBox_1, "cell 1 10");
+										JCheckBox departmentsCheckBox = new JCheckBox("");
+										panel.add(departmentsCheckBox, "cell 1 10");
 										
 										JLabel lblSetupDefaultLocations = new JLabel("Setup default Locations");
 										lblSetupDefaultLocations.setFont(new Font("Tahoma", Font.PLAIN, 14));
 										panel.add(lblSetupDefaultLocations, "cell 0 11");
 										
-										JCheckBox chckbxNewCheckBox_2 = new JCheckBox("");
-										panel.add(chckbxNewCheckBox_2, "cell 1 11");
+										JCheckBox locationCheckBox = new JCheckBox("");
+										panel.add(locationCheckBox, "cell 1 11");
+										
+										JLabel lblSetupDefaultAdmin = new JLabel("Setup default admin properties");
+										lblSetupDefaultAdmin.setFont(new Font("Tahoma", Font.PLAIN, 14));
+										panel.add(lblSetupDefaultAdmin, "cell 0 12");
+										
+										JCheckBox adminPropertiesCheckBox = new JCheckBox("");
+										panel.add(adminPropertiesCheckBox, "cell 1 12");
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Flat File Helper", null, panel_1, null);
@@ -304,6 +312,9 @@ public class MainApp {
 				Connection conn = connection.DBConnection(MainApp.this);
 				QueryExecuter executer = new QueryExecuter();
 				executer.QueryExecuter(table, conn);
+				if (MainApp.payrollComboBox.getSelectedItem().toString().equals("InCode") && scheduledJobsCheckBox.isSelected()) {
+					executer.createScheduledJobs(conn);
+				}
 				conn.close();
 				}
 				catch(Exception e) {
