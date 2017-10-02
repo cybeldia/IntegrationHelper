@@ -316,6 +316,7 @@ public class MainApp {
 					executer.createScheduledJobs(conn);
 				}
 				conn.close();
+				JOptionPane.showMessageDialog(null, "Execution Successful");
 				}
 				catch(Exception e) {
 					e.printStackTrace();

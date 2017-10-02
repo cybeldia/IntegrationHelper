@@ -3,8 +3,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
@@ -26,7 +28,7 @@ public class InCodeProcessor {
 	public static void InCodeValidator(MainApp app, JTextArea parsedLinesTextArea, JTextArea errorsTextArea)
 			throws IllegalStateException, IOException {
 		// Validator handles the actual parsing of the InCode file.
-		int expectedColumnCount = 5;
+		int expectedColumnCount = 85;
 		String csvFileName = app.getFile();
 
 		// Resets text areas before processing
@@ -36,25 +38,30 @@ public class InCodeProcessor {
 		if (expectedColumnCount == HeaderCount(csvFileName)) {
 			// Parse Csv into list of employees, later a new class will need to made that
 			// inherits from employee called InCode employee
-			List<Employee> list = new CsvToBeanBuilder<Employee>(new FileReader(csvFileName)).withType(Employee.class)
-					.withThrowExceptions(true).withVerifyReader(true).build().parse();
+			List<InCodeEmployee> list = new CsvToBeanBuilder<InCodeEmployee>(new FileReader(csvFileName))
+					.withType(InCodeEmployee.class).withThrowExceptions(true).withIgnoreLeadingWhiteSpace(true)
+					.withVerifyReader(true).build().parse();
+			
 			// Loop through employees check that fields are valid
 			for (Object object : list) {
-				Employee employee = (Employee) object;
+				InCodeEmployee employee = (InCodeEmployee) object;
 				// System.out.println(employee.toString());
-				DateValidator.isValidDate(employee, "mm/dd/yyyy", errorsTextArea);
+				DateValidator.isValidDate(employee, "MM/dd/yyyy", errorsTextArea);
 				parsedLinesTextArea.append(employee.toString());
 				// Check that csv matches user provided pay periods
-				if (!app.getEmployeeOptions().returnPayPeriod().contains(employee.getPayPeriod().trim())) {
-					errorsTextArea.append("Pay period does not match provided list: " + employee.getPayPeriod()
-							+ System.lineSeparator());
+				if (!(app.getEmployeeOptions().returnPayPeriod() == null)) {
+					if (!app.getEmployeeOptions().returnPayPeriod().contains(employee.getPayCycle().trim())) {
+						errorsTextArea.append("Pay period does not match provided list: " + employee.getPayCycle()
+								+ System.lineSeparator());
+					}
 				}
-				
-				if (!app.getEmployeeOptions().returnEmployeeTypes().contains(employee.getEmployeeType().trim())) {
-					errorsTextArea.append("Employee type does not match provided list: " + employee.getEmployeeType()
-							+ System.lineSeparator());
+				if (!(app.getEmployeeOptions().returnEmployeeTypes() == null)) {
+					if (!app.getEmployeeOptions().returnEmployeeTypes().contains(employee.getEmployeeType().trim())) {
+						errorsTextArea.append("Employee type does not match provided list: "
+								+ employee.getEmployeeType() + System.lineSeparator());
+					}
 				}
-				
+
 			}
 
 		} else {
@@ -63,18 +70,6 @@ public class InCodeProcessor {
 			errorsTextArea
 					.append("Number of columns does not match expected number for InCode" + System.lineSeparator());
 		}
-
-	}
-
-	// The mapping strategy below is not needed anymore, but I'm leaving it in as a
-	// reference.
-	@SuppressWarnings("rawtypes")
-	public static ColumnPositionMappingStrategy setColumnMapping() {
-		ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
-		strategy.setType(Employee.class);
-		String[] columns = new String[] { "name", "birthday", "address", "employeeType", "payPeriod" };
-		strategy.setColumnMapping(columns);
-		return strategy;
 
 	}
 

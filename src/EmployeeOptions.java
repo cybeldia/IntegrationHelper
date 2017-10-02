@@ -20,10 +20,13 @@ public class EmployeeOptions extends JDialog {
 	private JTextField payPeriodTextField;
 	private JTextField employeeTypesTextField;
 	private JTextField employeeStatusTextField;
+	private JTextField departmentsTextField;
 	
 	private static List<String> payPeriods;
 	private static List<String> employeeTypes;
 	private static List<String> employeeStatus;
+	private static List<String> departments;
+
 
 	/**
 	 * Launch the application.
@@ -46,7 +49,7 @@ public class EmployeeOptions extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[grow]", "[][][][]"));
+		contentPanel.setLayout(new MigLayout("", "[grow]", "[][][][][]"));
 		{
 			JLabel lblInputSettingFor = new JLabel("Input settings for the employee file below separated by a comma");
 			contentPanel.add(lblInputSettingFor, "cell 0 0");
@@ -82,6 +85,16 @@ public class EmployeeOptions extends JDialog {
 			employeeStatusTextField.setColumns(10);
 		}
 		{
+			JLabel lblDepartments = new JLabel("Departments");
+			contentPanel.add(lblDepartments, "flowx,cell 0 4");
+		}
+		{
+			departmentsTextField = new JTextField();
+			departmentsTextField.setToolTipText("Field is case-sensitive");
+			departmentsTextField.setColumns(10);
+			contentPanel.add(departmentsTextField, "cell 0 4,grow");
+		}
+		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -94,9 +107,19 @@ public class EmployeeOptions extends JDialog {
 						String[] employeeTypesArray = employeeTypesTextField.getText().split(",");
 						String[] employeeStatusArray = employeeStatusTextField.getText().split(",");
 						*/
+						if(!payPeriodTextField.getText().isEmpty()) {
 						payPeriods = new ArrayList<String>(Arrays.asList(payPeriodTextField.getText().split("\\s*,\\s*")));
+						}
+						if(!employeeTypesTextField.getText().isEmpty()) {
 						employeeTypes = new ArrayList<String>(Arrays.asList(employeeTypesTextField.getText().split("\\s*,\\s*")));
+						}
+						if(!employeeStatusTextField.getText().isEmpty()) {
 						employeeStatus = new ArrayList<String>(Arrays.asList(employeeStatusTextField.getText().split("\\s*,\\s*")));
+						}
+						
+						if(!departmentsTextField.getText().isEmpty()) {
+						departments = new ArrayList<String>(Arrays.asList(employeeStatusTextField.getText().split("\\s*,\\s*")));
+						}
 						setVisible(false);
 						
 					}
