@@ -71,6 +71,7 @@ public class MainApp {
 					BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow; 
 					UIManager.put("RootPane.setupButtonVisible", false);
 					org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+
 					window = new MainApp();
 					window.frmIntegrationAssistant.setVisible(true);
 				} catch (Exception e) {

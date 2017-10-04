@@ -1,25 +1,34 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
-import java.util.Scanner;
 
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
+import java.awt.EventQueue;
 
-public class main {
+import javax.swing.UIManager;
 
-	public static void main(String[] args) throws IOException {
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
-		System.out.println("Select payroll system for which to integrate with: ");
-		System.out.println("1: InCode");
-		Scanner scanner = new Scanner(System.in);
-		String input = scanner.next();
-		if (input.equals("InCode")) {
-			InCodeProcessor inCodeProcessor = new InCodeProcessor();
-			//inCodeProcessor.InCodeValidator();
-		} else {
-			System.out.println("Please enter a valid payroll system");
-		}
+import Controller.*;
+import View.*;
+import Model.*;
+
+public class Main {
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow; 
+					UIManager.put("RootPane.setupButtonVisible", false);
+					org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+					View.MainView mainView = new View.MainView();
+					mainView.getFrmIntegrationAssistant().setVisible(true);
+					EmployeeOptionsView employeeOptionsView = new EmployeeOptionsView();
+					MainController mainController = new MainController(mainView, employeeOptionsView);
+					mainController.initialize();
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
+	
 }
