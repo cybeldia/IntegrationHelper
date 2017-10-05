@@ -84,7 +84,7 @@ public class EmployeeOptionsView extends JDialog {
 			{
 				okButton = new JButton("OK");
 
-				okButton.setActionCommand("OK");
+			    okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
@@ -95,6 +95,62 @@ public class EmployeeOptionsView extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+
+	public JPanel getContentPanel() {
+		return contentPanel;
+	}
+
+	public void setContentPanel(JPanel contentPanel) {
+		this.contentPanel = contentPanel;
+	}
+
+	public JTextField getPayPeriodTextField() {
+		return payPeriodTextField;
+	}
+
+	public void setPayPeriodTextField(JTextField payPeriodTextField) {
+		this.payPeriodTextField = payPeriodTextField;
+	}
+
+	public JTextField getEmployeeTypesTextField() {
+		return employeeTypesTextField;
+	}
+
+	public void setEmployeeTypesTextField(JTextField employeeTypesTextField) {
+		this.employeeTypesTextField = employeeTypesTextField;
+	}
+
+	public JTextField getEmployeeStatusTextField() {
+		return employeeStatusTextField;
+	}
+
+	public void setEmployeeStatusTextField(JTextField employeeStatusTextField) {
+		this.employeeStatusTextField = employeeStatusTextField;
+	}
+
+	public JTextField getDepartmentsTextField() {
+		return departmentsTextField;
+	}
+
+	public void setDepartmentsTextField(JTextField departmentsTextField) {
+		this.departmentsTextField = departmentsTextField;
+	}
+
+	public JButton getOkButton() {
+		return okButton;
+	}
+
+	public void setOkButton(JButton okButton) {
+		this.okButton = okButton;
+	}
+
+	public JButton getCancelButton() {
+		return cancelButton;
+	}
+
+	public void setCancelButton(JButton cancelButton) {
+		this.cancelButton = cancelButton;
 	}
 
 }

@@ -1,26 +1,41 @@
-package Controller;
+package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+
 import View.*;
-import Model.*;
-import Service.*;
+import model.*;
 import net.proteanit.sql.DbUtils;
+import service.*;
+import service.impl.ProcessorThread;
+
 
 public class MainController {
 	private MainView mainView;
 	private EmployeeOptionsView employeeOptionsView;
 	private ActionListener actionListener;
+	
+	private List<String> payPeriods;
+	private List<String> employeeTypes;
+	private List<String> employeeStatus;
+	private List<String> departments;
+
 
 	public MainController(MainView mainView, EmployeeOptionsView employeeOptionsView) {
 		this.mainView = mainView;
-
+		this.employeeOptionsView = employeeOptionsView;
 	}
 
 	// Initialize Controller
@@ -29,14 +44,14 @@ public class MainController {
 		FlatFilePicker();
 		ServerXMLPicker();
 		PopulateDefaults();
+		SetEmployeeValidationFields();
 	}
 
 	// Flat file validation Settings button
 	public void FlatFileValidationSettings() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainView.getEmployeeOptionsView().setVisible(true);
-				mainView.getEmployeeOptionsView().requestFocus();
+				employeeOptionsView.setVisible(true);
 			}
 		};
 		mainView.getBtnEmployeeCheckerSettings().addActionListener(actionListener);
@@ -63,9 +78,7 @@ public class MainController {
 	public void ProcessFlatFile() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Runnable runnable = new ProcessorThread(window, parsedLinesTextArea, errorsTextArea);
-				//Thread thread = new Thread(runnable);
-				//thread.start();
+				
 			}
 		};
 		mainView.getBtnProcess().addActionListener(actionListener);
@@ -105,4 +118,42 @@ public class MainController {
 		mainView.getBtnPopulateTable().addActionListener(actionListener);
 
 	}
+	
+	public void SetEmployeeValidationFields() {
+		actionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!employeeOptionsView.getPayPeriodTextField().getText().isEmpty()) {
+				payPeriods = new ArrayList<String>(Arrays.asList(employeeOptionsView.getPayPeriodTextField().getText().split("\\s*,\\s*")));
+				}
+				else {
+					payPeriods = null;
+				}
+				
+				if(!employeeOptionsView.getEmployeeTypesTextField().getText().isEmpty()) {
+				employeeTypes = new ArrayList<String>(Arrays.asList(employeeOptionsView.getEmployeeTypesTextField().getText().split("\\s*,\\s*")));
+				}
+				else {
+					employeeTypes = null;
+				}
+				
+				if(!employeeOptionsView.getEmployeeStatusTextField().getText().isEmpty()) {
+				employeeStatus = new ArrayList<String>(Arrays.asList(employeeOptionsView.getEmployeeStatusTextField().getText().split("\\s*,\\s*")));
+				}
+				else {
+					employeeStatus = null;
+				}
+				
+				if(!employeeOptionsView.getDepartmentsTextField().getText().isEmpty()) {
+				departments = new ArrayList<String>(Arrays.asList(employeeOptionsView.getDepartmentsTextField().getText().split("\\s*,\\s*")));
+				}
+				else {
+					departments = null;
+				}
+				employeeOptionsView.setVisible(false);
+			}
+		};
+		employeeOptionsView.getOkButton().addActionListener(actionListener);
+
+	}
+	
 }

@@ -10,6 +10,7 @@ public class ProcessorThread implements Runnable {
 	private final JTextArea errorsTextArea;
 	
 	//Reference problem didn't need to be passed here as the variables are class level variables in the other files. This was just experimenting.
+
 	public ProcessorThread(MainApp appRef, JTextArea parsedLinestextAreaRef, JTextArea errorsTextArea) {
 		this.app = appRef;
 		this.parsedLinesTextArea = parsedLinestextAreaRef;
