@@ -13,10 +13,12 @@ public class Validator implements IValidator {
 	private List<String> employeeTypes;
 	private List<String> employeeStatus;
 	private List<String> departments;
+	private List<String> validatedData;
+	
 	
 	
 	@Override
-	public List<String> ValidateDepartments(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
+	public List<String> ICValidateDepartments(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
 		List<String> inCorrectEmployeeStatus = new ArrayList<String>();
 		if(!(fieldText == null)) {
 		departments = new ArrayList<String>(Arrays.asList(fieldText.split("\\s*,\\s*")));
@@ -31,7 +33,7 @@ public class Validator implements IValidator {
 	}
 	
 	@Override
-	public List<String> ValidateEmployeeStatus(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
+	public List<String> ICValidateEmployeeStatus(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
 		List<String> inCorrectEmployeeStatus = new ArrayList<String>();
 		if(!(fieldText == null)) {
 		employeeStatus = new ArrayList<String>(Arrays.asList(fieldText.split("\\s*,\\s*")));
@@ -44,8 +46,9 @@ public class Validator implements IValidator {
 		}
 		return inCorrectEmployeeStatus;
 	}
+	
 	@Override
-	public List<String> ValidateEmployeeTypes(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
+	public List<String> ICValidateEmployeeTypes(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
 		
 		List<String> inCorrectEmployeeTypes = new ArrayList<String>();
 		if(!(fieldText == null)) {
@@ -60,7 +63,7 @@ public class Validator implements IValidator {
 		return inCorrectEmployeeTypes;
 	}
 	@Override
-	public List<String> ValidatePayPeriods(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
+	public List<String> ICValidatePayPeriods(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
 		List<String> inCorrectPayPeriods = new ArrayList<String>();
 		if(!(fieldText == null)) {
 		payPeriods = new ArrayList<String>(Arrays.asList(fieldText.split("\\s*,\\s*")));

@@ -9,8 +9,8 @@ import com.shaffer.integrationhelper.model.InCodeEmployee;
 @Service
 public interface IValidator {
 
-	public List<String> ValidatePayPeriods(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
-	public List<String> ValidateEmployeeTypes(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
-	public List<String> ValidateEmployeeStatus(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
-	public List<String> ValidateDepartments(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
+	public List<String> ICValidatePayPeriods(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
+	public List<String> ICValidateEmployeeTypes(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
+	public List<String> ICValidateEmployeeStatus(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
+	public List<String> ICValidateDepartments(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
 }

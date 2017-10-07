@@ -96,44 +96,19 @@ public class MainController {
 
 				mainView.getErrorsTextArea().setText("");
 				mainView.getParsedLinesTextArea().setText("");
+				try {
 				processor.setPayrollSystem(payrollSystem);
 				processor.setFilePath(filePath);
 				processor.run();
+				} catch (Exception exception) {
+					mainView.getErrorsTextArea().setText("Error with file. Please check formatting");
+				}
 				mainView.getParsedLinesTextArea().setText(processor.ParsedLines());
 				
-
-				if (payrollSystem == "InCode") {
-					List<InCodeEmployee> employees = processor.getEmployeeList();
-					inCorrectPayPeriods = validator.ValidatePayPeriods(
-							employeeOptionsView.getPayPeriodTextField().getText(), employees, payrollSystem);
-					
-					inCorrectDepartments = validator.ValidateDepartments(
-							employeeOptionsView.getDepartmentsTextField().getText(), employees, payrollSystem);
-					
-					inCorrectEmployeeStatus = validator.ValidateEmployeeStatus(
-							employeeOptionsView.getEmployeeStatusTextField().getText(), employees, payrollSystem);
-					
-					inCorrectEmployeeTypes = validator.ValidateEmployeeTypes(
-							employeeOptionsView.getEmployeeTypesTextField().getText(), employees, payrollSystem);
-					
-					for (String line : inCorrectPayPeriods) {
-						mainView.getErrorsTextArea().append(line);
-					}
-					
-					for (String line : inCorrectDepartments) {
-						mainView.getErrorsTextArea().append(line);
-					}
-					
-					for (String line : inCorrectEmployeeStatus) {
-						mainView.getErrorsTextArea().append(line);
-					}
-					
-					for (String line : inCorrectEmployeeTypes) {
-						mainView.getErrorsTextArea().append(line);
-					}
-					
-					
+				if(payrollSystem == "InCode") {
+					ValidateInCode();
 				}
+				
 			}
 		};
 		mainView.getBtnProcess().addActionListener(actionListener);
@@ -172,6 +147,40 @@ public class MainController {
 		};
 		mainView.getBtnPopulateTable().addActionListener(actionListener);
 
+	}
+	
+	public void ValidateInCode() {
+		String payrollSystem = mainView.getPayrollComboBox().getSelectedItem().toString();
+		if (payrollSystem == "InCode") {
+			List<InCodeEmployee> employees = processor.getEmployeeList();
+			inCorrectPayPeriods = validator.ICValidatePayPeriods(
+					employeeOptionsView.getPayPeriodTextField().getText(), employees, payrollSystem);
+			
+			inCorrectDepartments = validator.ICValidateDepartments(
+					employeeOptionsView.getDepartmentsTextField().getText(), employees, payrollSystem);
+			
+			inCorrectEmployeeStatus = validator.ICValidateEmployeeStatus(
+					employeeOptionsView.getEmployeeStatusTextField().getText(), employees, payrollSystem);
+			
+			inCorrectEmployeeTypes = validator.ICValidateEmployeeTypes(
+					employeeOptionsView.getEmployeeTypesTextField().getText(), employees, payrollSystem);
+			
+			for (String line : inCorrectPayPeriods) {
+				mainView.getErrorsTextArea().append(line);
+			}
+			
+			for (String line : inCorrectDepartments) {
+				mainView.getErrorsTextArea().append(line);
+			}
+			
+			for (String line : inCorrectEmployeeStatus) {
+				mainView.getErrorsTextArea().append(line);
+			}
+			
+			for (String line : inCorrectEmployeeTypes) {
+				mainView.getErrorsTextArea().append(line);
+			}
+		}
 	}
 
 	public void SetEmployeeValidationFields() {

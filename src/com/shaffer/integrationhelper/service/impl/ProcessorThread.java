@@ -17,22 +17,21 @@ import com.shaffer.integrationhelper.service.IProcessorThread;
 
 //Class should control what processor to use based on the payroll system
 
-
 public class ProcessorThread implements Runnable, IProcessorThread {
-	
+
 	private String payrollSystem;
 	private String filePath;
 	private List<InCodeEmployee> employeeList;
-	
+
 	@Override
 	public void run() {
 		if (payrollSystem.equals("InCode")) {
 			InCodeProcessor inCodeProcessor = new InCodeProcessor();
 			try {
-				
+
 				inCodeProcessor.InCodeValidator(filePath);
 				employeeList = inCodeProcessor.getList();
-			
+
 			} catch (IllegalStateException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -40,11 +39,13 @@ public class ProcessorThread implements Runnable, IProcessorThread {
 
 		}
 	}
-	
+
 	public String ParsedLines() {
-		String parsedLines ="";
-		for(InCodeEmployee employee : employeeList) {
-			parsedLines += employee.toString();
+		String parsedLines = "";
+		if (employeeList != null) {
+			for (InCodeEmployee employee : employeeList) {
+				parsedLines += employee.toString();
+			}
 		}
 		return parsedLines;
 	}
@@ -53,24 +54,20 @@ public class ProcessorThread implements Runnable, IProcessorThread {
 		return payrollSystem;
 	}
 
-
 	public void setPayrollSystem(String payrollSystem) {
 		this.payrollSystem = payrollSystem;
 	}
-
 
 	public String getFilePath() {
 		return filePath;
 	}
 
-
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
 
-
 	public List<InCodeEmployee> getEmployeeList() {
 		return employeeList;
 	}
-	
+
 }
