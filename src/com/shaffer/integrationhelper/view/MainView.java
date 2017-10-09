@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -24,16 +26,25 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+
+import com.shaffer.integrationhelper.events.ErrorEvent;
+import com.shaffer.integrationhelper.events.ParsedLineEvent;
+import com.shaffer.integrationhelper.model.InCodeEmployee;
 
 import net.miginfocom.swing.MigLayout;
 import net.proteanit.sql.DbUtils;
 
-
-public class MainView {
+@Component
+public class MainView implements ApplicationListener<ErrorEvent> {
 	
 	//JFrame
 	private JFrame frmIntegrationAssistant;
@@ -66,7 +77,11 @@ public class MainView {
 	private JButton btnExecute;
 	private JButton btnProcess;
 
-	public MainView() {
+	public MainView() throws Exception {
+		
+		BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow; 
+		UIManager.put("RootPane.setupButtonVisible", false);
+		org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
 		frmIntegrationAssistant = new JFrame();
 		frmIntegrationAssistant.setTitle("Integration Assistant");
 		frmIntegrationAssistant.setBounds(100, 100, 800, 600);
@@ -235,6 +250,22 @@ public class MainView {
 		panel_1.add(fileText, "cell 0 0");
 		fileText.setColumns(25);
 
+	}
+	
+	@EventListener
+	public void onApplicationEvent(ErrorEvent event) {
+		for(String string : event.getError()) {
+			errorsTextArea.append(string);
+		}
+	}
+	
+	@EventListener
+	public void onApplicationEvent(ParsedLineEvent event) {
+		String employee;
+		for(InCodeEmployee inCodeEmployee : event.getInCodeLines()) {
+			employee = inCodeEmployee.toString();
+			parsedLinesTextArea.append(employee);
+		}
 	}
 
 	public JFrame getFrmIntegrationAssistant() {

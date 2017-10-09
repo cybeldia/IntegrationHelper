@@ -1,4 +1,4 @@
-package com.shaffer.integrationhelper;
+package com.shaffer.integrationhelper.service.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -6,6 +6,8 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 import javax.swing.JTextArea;
+
+import com.shaffer.integrationhelper.InCodeEmployee;
 
 public class DateValidator {
 	//Handles the basic validation of date formats

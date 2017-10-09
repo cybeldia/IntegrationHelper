@@ -13,19 +13,19 @@ import com.shaffer.integrationhelper.controller.*;
 import com.shaffer.integrationhelper.diconfiguration.DIConfiguration;
 import com.shaffer.integrationhelper.model.*;
 import com.shaffer.integrationhelper.service.IProcessorThread;
+import com.shaffer.integrationhelper.service.impl.Validator;
 import com.shaffer.integrationhelper.view.*;
 
 public class Main {
 	
 	public static void main(String[] args) {
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 				    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DIConfiguration.class);
-					BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow; 
-					UIManager.put("RootPane.setupButtonVisible", false);
-					org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
-					com.shaffer.integrationhelper.view.MainView mainView = new com.shaffer.integrationhelper.view.MainView();
+					MainView mainView = context.getBean(MainView.class);
+					//com.shaffer.integrationhelper.view.MainView mainView = new com.shaffer.integrationhelper.view.MainView();
 					com.shaffer.integrationhelper.view.EmployeeOptionsView employeeOptionsView = new com.shaffer.integrationhelper.view.EmployeeOptionsView();
 					mainView.getFrmIntegrationAssistant().setVisible(true);
 					//MainController mainController = new MainController(mainView, employeeOptionsView);
@@ -34,6 +34,7 @@ public class Main {
 					mainController.setMainView(mainView);
 					mainController.setEmployeeOptionsView(employeeOptionsView);
 					mainController.initialize();
+				
 					
 					
 				} catch (Exception e) {

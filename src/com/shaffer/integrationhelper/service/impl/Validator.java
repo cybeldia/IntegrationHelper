@@ -1,83 +1,99 @@
 package com.shaffer.integrationhelper.service.impl;
 
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
 
+import javax.swing.JTextArea;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+
+import com.shaffer.integrationhelper.events.ErrorEvent;
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 import com.shaffer.integrationhelper.service.IValidator;
 
-public class Validator implements IValidator {
-	
+public class Validator implements IValidator, ApplicationEventPublisherAware {
+
 	private List<String> payPeriods;
 	private List<String> employeeTypes;
 	private List<String> employeeStatus;
 	private List<String> departments;
-	private List<String> validatedData;
-	
-	
-	
+
+	private ApplicationEventPublisher applicationEventPublisher = null;
+
 	@Override
-	public List<String> ICValidateDepartments(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
-		List<String> inCorrectEmployeeStatus = new ArrayList<String>();
-		if(!(fieldText == null)) {
-		departments = new ArrayList<String>(Arrays.asList(fieldText.split("\\s*,\\s*")));
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	public List<String> ICValidate(String enteredDepartments, String enteredEmployeeTypes, String enteredEmployeeStatus,
+			String enteredPayPeriods, List<InCodeEmployee> employees) {
+
+		// Save overall Errors
+		List<String> errorsList = new ArrayList<String>();
+
+		// Handle Departments
+		if (enteredDepartments != null) {
+			departments = new ArrayList<String>(Arrays.asList(enteredDepartments.split("\\s*,\\s*")));
 		}
-		
-		for (InCodeEmployee employee : employees) {
-			if(!payPeriods.contains(employee.getDepartment().toString())) {
-				inCorrectEmployeeStatus.add("The department " + employee.getDepartment().toString() + " is incorrect." + System.lineSeparator());
+
+		if (enteredEmployeeTypes != null) {
+			employeeTypes = new ArrayList<String>(Arrays.asList(enteredEmployeeTypes.split("\\s*,\\s*")));
+		}
+
+		if (enteredEmployeeStatus != null) {
+			employeeStatus = new ArrayList<String>(Arrays.asList(enteredEmployeeStatus.split("\\s*,\\s*")));
+		}
+
+		if (enteredPayPeriods != null) {
+			payPeriods = new ArrayList<String>(Arrays.asList(enteredPayPeriods.split("\\s*,\\s*")));
+		}
+
+		if (employees != null) {
+			for (InCodeEmployee employee : employees) {
+				if (!departments.contains(employee.getDepartment().toString())) {
+					errorsList.add("The department " + employee.getDepartment().toString() + " is incorrect."
+							+ System.lineSeparator());
+				}
+
+				if (!employeeStatus.contains(employee.getStatus().toString())) {
+					errorsList.add("The employee status " + employee.getStatus().toString() + " is incorrect."
+							+ System.lineSeparator());
+				}
+
+				if (!employeeTypes.contains(employee.getEmployeeType().toString())) {
+					errorsList.add("The employee type " + employee.getEmployeeType().toString() + " is incorrect."
+							+ System.lineSeparator());
+				}
+
+				if (!payPeriods.contains(employee.getPayCycle().toString())) {
+					errorsList.add("The pay period " + employee.getPayCycle().toString() + " is incorrect."
+							+ System.lineSeparator());
+				}
+				
+				if(!(isValidDate(employee, "MM/dd/yyyy"))) {
+					errorsList.add("The date " + employee.getBirthDate().toString() + " is incorrectly formatted."
+							+ System.lineSeparator());
+				}
 			}
 		}
-		return inCorrectEmployeeStatus;
+		this.applicationEventPublisher.publishEvent(new ErrorEvent(this, errorsList));
+		return errorsList;
 	}
-	
-	@Override
-	public List<String> ICValidateEmployeeStatus(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
-		List<String> inCorrectEmployeeStatus = new ArrayList<String>();
-		if(!(fieldText == null)) {
-		employeeStatus = new ArrayList<String>(Arrays.asList(fieldText.split("\\s*,\\s*")));
-		}
-		
-		for (InCodeEmployee employee : employees) {
-			if(!payPeriods.contains(employee.getStatus().toString())) {
-				inCorrectEmployeeStatus.add("The employee status " + employee.getStatus().toString() + " is incorrect." + System.lineSeparator());
+
+	public Boolean isValidDate(InCodeEmployee employee, String dateFormat) {
+		if (employee != null) {
+			try {
+				TemporalAccessor ta = DateTimeFormatter.ofPattern(dateFormat).parse(employee.getBirthDate());
+			} catch (Exception e) {
+				return false;
 			}
 		}
-		return inCorrectEmployeeStatus;
+		return true;
 	}
-	
-	@Override
-	public List<String> ICValidateEmployeeTypes(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
-		
-		List<String> inCorrectEmployeeTypes = new ArrayList<String>();
-		if(!(fieldText == null)) {
-		employeeTypes = new ArrayList<String>(Arrays.asList(fieldText.split("\\s*,\\s*")));
-		}
-		
-		for (InCodeEmployee employee : employees) {
-			if(!payPeriods.contains(employee.getEmployeeType().toString())) {
-				inCorrectEmployeeTypes.add("The employee type " + employee.getEmployeeType().toString() + " is incorrect." + System.lineSeparator());
-			}
-		}
-		return inCorrectEmployeeTypes;
-	}
-	@Override
-	public List<String> ICValidatePayPeriods(String fieldText, List<InCodeEmployee> employees, String payrollSystem) {
-		List<String> inCorrectPayPeriods = new ArrayList<String>();
-		if(!(fieldText == null)) {
-		payPeriods = new ArrayList<String>(Arrays.asList(fieldText.split("\\s*,\\s*")));
-		}
-		
-		for (InCodeEmployee employee : employees) {
-			if(!payPeriods.contains(employee.getPayCycle().toString())) {
-				inCorrectPayPeriods.add("The pay period " + employee.getPayCycle().toString() + " is incorrect." + System.lineSeparator());
-			}
-		}
-		return inCorrectPayPeriods;
-	}
-	
-	
-	
 
 }

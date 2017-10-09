@@ -1,16 +1,16 @@
 package com.shaffer.integrationhelper.service;
 
 import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 
+
 @Service
 public interface IValidator {
+	
+	public List<String> ICValidate(String enteredDepartments, String enteredEmployeeTypes, String enteredEmployeeStatus, String enteredPayPeriods, List<InCodeEmployee> employees);
 
-	public List<String> ICValidatePayPeriods(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
-	public List<String> ICValidateEmployeeTypes(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
-	public List<String> ICValidateEmployeeStatus(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
-	public List<String> ICValidateDepartments(String fieldText, List<InCodeEmployee> employees, String payrollSystem);
 }

@@ -10,6 +10,7 @@ import com.shaffer.integrationhelper.service.IValidator;
 import com.shaffer.integrationhelper.service.impl.InCodeProcessor;
 import com.shaffer.integrationhelper.service.impl.ProcessorThread;
 import com.shaffer.integrationhelper.service.impl.Validator;
+import com.shaffer.integrationhelper.view.MainView;
 
 @Configuration
 @ComponentScan(basePackages = {

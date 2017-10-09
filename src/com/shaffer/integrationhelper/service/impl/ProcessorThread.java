@@ -8,20 +8,31 @@ import javax.swing.JTextArea;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.shaffer.integrationhelper.controller.*;
+import com.shaffer.integrationhelper.events.ErrorEvent;
+import com.shaffer.integrationhelper.events.ParsedLineEvent;
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 import com.shaffer.integrationhelper.service.IProcessorThread;
 
 //Class should control what processor to use based on the payroll system
 
-public class ProcessorThread implements Runnable, IProcessorThread {
+public class ProcessorThread implements Runnable, IProcessorThread, ApplicationEventPublisherAware {
 
 	private String payrollSystem;
 	private String filePath;
 	private List<InCodeEmployee> employeeList;
+	
+	private ApplicationEventPublisher applicationEventPublisher = null;
+
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
 
 	@Override
 	public void run() {
@@ -38,8 +49,10 @@ public class ProcessorThread implements Runnable, IProcessorThread {
 			}
 
 		}
+		
+		this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, employeeList));
 	}
-
+	
 	public String ParsedLines() {
 		String parsedLines = "";
 		if (employeeList != null) {
@@ -49,7 +62,7 @@ public class ProcessorThread implements Runnable, IProcessorThread {
 		}
 		return parsedLines;
 	}
-
+	
 	public String getPayrollSystem() {
 		return payrollSystem;
 	}
@@ -69,5 +82,4 @@ public class ProcessorThread implements Runnable, IProcessorThread {
 	public List<InCodeEmployee> getEmployeeList() {
 		return employeeList;
 	}
-
 }
