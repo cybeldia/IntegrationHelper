@@ -17,9 +17,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
+import com.shaffer.integrationhelper.CurrentMapping;
 import com.shaffer.integrationhelper.model.*;
 import com.shaffer.integrationhelper.service.IProcessorThread;
 import com.shaffer.integrationhelper.service.IValidator;
+import com.shaffer.integrationhelper.service.impl.QueryExecuter;
+import com.shaffer.integrationhelper.service.impl.XMLToDBConnection;
 import com.shaffer.integrationhelper.view.*;
 
 import net.proteanit.sql.DbUtils;
@@ -101,15 +104,14 @@ public class MainController {
 					processor.setPayrollSystem(payrollSystem);
 					processor.setFilePath(filePath);
 					processor.run();
+
+					if (payrollSystem == "InCode") {
+						ValidateInCode();
+					}
+
 				} catch (Exception exception) {
 					mainView.getErrorsTextArea().setText("Error with file. Please check formatting");
 				}
-				//mainView.getParsedLinesTextArea().setText(processor.ParsedLines());
-
-				if (payrollSystem == "InCode") {
-					ValidateInCode();
-				}
-
 			}
 		};
 		mainView.getBtnProcess().addActionListener(actionListener);
@@ -133,7 +135,48 @@ public class MainController {
 	}
 
 	// Add Test Database Connection
-	// Add Database Execute
+
+	public void TestDBConnection() {
+		actionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					XMLToDBConnection connection = new XMLToDBConnection();
+					CurrentMapping cm = new CurrentMapping();
+					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().toString());
+					mainView.getTable().setModel(DbUtils.resultSetToTableModel(cm.GetCurrentMapping(conn)));
+					conn.close();
+					JOptionPane.showMessageDialog(null, "Connection successful");
+				} catch (Exception ex) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Connection unsuccessful");
+					ex.printStackTrace();
+				}
+			}
+
+		};
+		mainView.getBtnTestDatabaseConnection().addActionListener(actionListener);
+	}
+
+	public void ExecuteQuery() {
+		actionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					XMLToDBConnection connection = new XMLToDBConnection();
+					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().toString());
+					QueryExecuter executer = new QueryExecuter(mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
+					executer.ExecuteMappingQuery();
+					if (mainView.getScheduledJobsCheckBox().isSelected()) {
+						executer.CreateScheduledJobs();
+					}
+					conn.close();
+					JOptionPane.showMessageDialog(null, "Execution Successful");
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		};
+		mainView.getBtnExecute().addActionListener(actionListener);
+	}
 
 	// Populate payroll defaults
 	public void PopulateDefaults() {

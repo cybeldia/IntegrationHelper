@@ -1,22 +1,34 @@
-package com.shaffer.integrationhelper;
+package com.shaffer.integrationhelper.service.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JTable;
 
 public class QueryExecuter {
 	
-	PreparedStatement updateMapping = null;
-	String updateString =
+	private PreparedStatement updateMapping = null;
+	private String updateString =
 			"UPDATE employee_build_mapping "
 			+ " SET host_attribute_name = ?"
 			+ " WHERE employee_build_mapping_id = ?";
-	String createInCodeEmployeeJob = 
+	private String createInCodeEmployeeJob = 
 			"INSERT INTO scheduled_job (class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
 			+ " VALUES('test', 600, 'test desciprtion', current_timestamp, 'test job', '24:00', '22:00')";
 	
-	public void QueryExecuter(JTable tbl, Connection conn) {
+	private String payrollSystem;
+	private Connection conn;
+	private JTable tbl;
+	
+	public QueryExecuter(String payrollSystem, Connection conn, JTable tbl) {
+		this.payrollSystem = payrollSystem;
+		this.conn = conn;
+		this.tbl = tbl;
+
+	}
+	
+	public void ExecuteMappingQuery() {
 		
 		try {
 			conn.setAutoCommit(false);
@@ -34,15 +46,23 @@ public class QueryExecuter {
 		}
 	}
 	
-	public void createScheduledJobs(Connection conn) {
+	public void CreateScheduledJobs() {
 		try {
 		conn.setAutoCommit(false);
+		if(payrollSystem.equals("InCode"))
 		conn.prepareStatement(createInCodeEmployeeJob).execute();
 		conn.commit();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ResultSet GetCurrentMapping() throws Exception {
+
+		PreparedStatement st = conn.prepareStatement("SELECT * FROM employee_build_mapping");
+		ResultSet rs = st.executeQuery();
+		return rs;
 	}
 
 }

@@ -22,6 +22,9 @@ import javax.swing.UIManager;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
 
+import com.shaffer.integrationhelper.service.impl.QueryExecuter;
+import com.shaffer.integrationhelper.service.impl.XMLToDBConnection;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JSplitPane;
 import javax.swing.JSeparator;
