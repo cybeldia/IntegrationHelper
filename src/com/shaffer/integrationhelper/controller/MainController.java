@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
-import com.shaffer.integrationhelper.CurrentMapping;
 import com.shaffer.integrationhelper.model.*;
 import com.shaffer.integrationhelper.service.IProcessorThread;
 import com.shaffer.integrationhelper.service.IValidator;
@@ -62,6 +61,8 @@ public class MainController {
 		PopulateDefaults();
 		SetEmployeeValidationFields();
 		ProcessFlatFile();
+		TestDBConnection();
+		ExecuteQuery();
 	}
 
 	// Flat file validation Settings button
@@ -135,15 +136,14 @@ public class MainController {
 	}
 
 	// Add Test Database Connection
-
 	public void TestDBConnection() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					XMLToDBConnection connection = new XMLToDBConnection();
-					CurrentMapping cm = new CurrentMapping();
-					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().toString());
-					mainView.getTable().setModel(DbUtils.resultSetToTableModel(cm.GetCurrentMapping(conn)));
+					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().getText());
+					QueryExecuter executer = new QueryExecuter(mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
+					mainView.getTable().setModel(DbUtils.resultSetToTableModel(executer.GetCurrentMapping()));
 					conn.close();
 					JOptionPane.showMessageDialog(null, "Connection successful");
 				} catch (Exception ex) {

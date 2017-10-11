@@ -55,22 +55,22 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 
 		if (employees != null) {
 			for (InCodeEmployee employee : employees) {
-				if (!departments.contains(employee.getDepartment().toString())) {
+				if (!departments.contains(employee.getDepartment().toString()) && !enteredDepartments.trim().isEmpty()) {
 					errorsList.add("The department " + employee.getDepartment().toString() + " is incorrect."
 							+ System.lineSeparator());
 				}
 
-				if (!employeeStatus.contains(employee.getStatus().toString())) {
+				if (!employeeStatus.contains(employee.getStatus().toString()) && !enteredEmployeeStatus.trim().isEmpty()) {
 					errorsList.add("The employee status " + employee.getStatus().toString() + " is incorrect."
 							+ System.lineSeparator());
 				}
 
-				if (!employeeTypes.contains(employee.getEmployeeType().toString())) {
+				if (!employeeTypes.contains(employee.getEmployeeType().toString()) && !enteredEmployeeTypes.trim().isEmpty()) {
 					errorsList.add("The employee type " + employee.getEmployeeType().toString() + " is incorrect."
 							+ System.lineSeparator());
 				}
 
-				if (!payPeriods.contains(employee.getPayCycle().toString())) {
+				if (!payPeriods.contains(employee.getPayCycle().toString()) && !enteredPayPeriods.trim().isEmpty()) {
 					errorsList.add("The pay period " + employee.getPayCycle().toString() + " is incorrect."
 							+ System.lineSeparator());
 				}

@@ -10,7 +10,7 @@ import java.sql.Statement;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import com.shaffer.integrationhelper.DataSources;
+import com.shaffer.integrationhelper.model.v4DataSource;
 
 public class XMLToDBConnection {
 	
@@ -18,7 +18,7 @@ public class XMLToDBConnection {
 		Serializer serializer = new Persister();
 		File source = new File(filePath);
 
-		DataSources datasource = serializer.read(DataSources.class, source);
+		v4DataSource datasource = serializer.read(v4DataSource.class, source);
 		Class.forName(datasource.getDriverClass());
 		Connection conn = DriverManager.getConnection(datasource.getConnectionURL(), datasource.getUserName(),
 				datasource.getPassword());

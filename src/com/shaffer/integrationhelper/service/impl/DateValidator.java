@@ -7,7 +7,7 @@ import java.util.Date;
 
 import javax.swing.JTextArea;
 
-import com.shaffer.integrationhelper.InCodeEmployee;
+import com.shaffer.integrationhelper.model.InCodeEmployee;
 
 public class DateValidator {
 	//Handles the basic validation of date formats
