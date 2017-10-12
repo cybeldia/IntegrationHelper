@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.shaffer.integrationhelper.controller.*;
 import com.shaffer.integrationhelper.events.ErrorEvent;
 import com.shaffer.integrationhelper.events.ParsedLineEvent;
+import com.shaffer.integrationhelper.model.InCodeBenefit;
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 import com.shaffer.integrationhelper.service.IProcessorThread;
 
@@ -25,8 +26,10 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 
 	private String payrollSystem;
 	private String filePath;
-	private List<InCodeEmployee> employeeList;
-	
+	private String fileType;
+	private List<?> employeeList;
+	private List<?> benefitList;
+
 	private ApplicationEventPublisher applicationEventPublisher = null;
 
 	@Override
@@ -39,30 +42,21 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 		if (payrollSystem.equals("InCode")) {
 			InCodeProcessor inCodeProcessor = new InCodeProcessor();
 			try {
+				if (fileType.equals("Employee")) {
+					inCodeProcessor.processEmployee(filePath);
+					employeeList = inCodeProcessor.getEmployeeList();
+					this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, employeeList));
+				} else if (fileType.equals("Benefit")) {
+					inCodeProcessor.processBenefit(filePath);
+					benefitList = inCodeProcessor.getBenefitList();
+					this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, benefitList));
+				}
+			} catch (IOException e) {
 
-				inCodeProcessor.InCodeValidator(filePath);
-				employeeList = inCodeProcessor.getList();
-
-			} catch (IllegalStateException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-		
-		this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, employeeList));
-	}
-	
-	public String ParsedLines() {
-		String parsedLines = "";
-		if (employeeList != null) {
-			for (InCodeEmployee employee : employeeList) {
-				parsedLines += employee.toString();
 			}
 		}
-		return parsedLines;
 	}
-	
+
 	public String getPayrollSystem() {
 		return payrollSystem;
 	}
@@ -79,7 +73,21 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 		this.filePath = filePath;
 	}
 
-	public List<InCodeEmployee> getEmployeeList() {
+	public List<?> getEmployeeList() {
 		return employeeList;
 	}
+
+	public String getFileType() {
+		return fileType;
+	}
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	@Override
+	public List<?> getBenefitList() {
+		return benefitList;
+	}
+
 }

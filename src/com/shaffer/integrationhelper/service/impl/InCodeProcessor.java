@@ -22,6 +22,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.shaffer.integrationhelper.model.InCodeBenefit;
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 
 import javafx.collections.FXCollections;
@@ -29,27 +30,44 @@ import javafx.collections.ObservableList;
 
 public class InCodeProcessor {
 
-	private List<InCodeEmployee> list;
+	private List<InCodeEmployee> employeeList;
+	private List<InCodeBenefit>  benefitList;
 
-	public void InCodeValidator(String filePath) throws IllegalStateException, FileNotFoundException, IOException {
+	public void processEmployee(String filePath) throws IllegalStateException, FileNotFoundException, IOException {
 		// Validator handles the actual parsing of the InCode file.
 		int expectedColumnCount = 85;
 		String csvFileName = filePath;
 
-		if (expectedColumnCount == HeaderCount(csvFileName)) {
+		if (expectedColumnCount == headerCount(csvFileName)) {
 			// Parse Csv into list of employees, later a new class will need to made that
 			// inherits from employee called InCode employee
 			List<InCodeEmployee> list = new CsvToBeanBuilder<InCodeEmployee>(new FileReader(csvFileName))
 					.withType(InCodeEmployee.class).withThrowExceptions(true).withIgnoreLeadingWhiteSpace(true)
 					.withVerifyReader(true).build().parse();
-			this.list = list;
+			this.employeeList = list;
+
+		}
+	}
+	
+	public void processBenefit(String filePath) throws IllegalStateException, FileNotFoundException, IOException {
+		// Validator handles the actual parsing of the InCode file.
+		int expectedColumnCount = 3;
+		String csvFileName = filePath;
+
+		if (expectedColumnCount == headerCount(csvFileName)) {
+			// Parse Csv into list of employees, later a new class will need to made that
+			// inherits from employee called InCode employee
+			List<InCodeBenefit> list = new CsvToBeanBuilder<InCodeBenefit>(new FileReader(csvFileName))
+					.withType(InCodeBenefit.class).withThrowExceptions(true).withIgnoreLeadingWhiteSpace(true)
+					.withVerifyReader(true).build().parse();
+			this.benefitList = list;
 
 		}
 	}
 
 	// Maybe seperate this out into another class later once the app handles more
 	// than InCode.
-	public int HeaderCount(String path) {
+	public int headerCount(String path) {
 
 		int columnCount = 0;
 		try {
@@ -64,8 +82,13 @@ public class InCodeProcessor {
 		return columnCount;
 	}
 
-	public List<InCodeEmployee> getList() {
-		return list;
+	public List<InCodeEmployee> getEmployeeList() {
+		return employeeList;
 	}
+	
+	public List<InCodeBenefit> getBenefitList(){
+		return benefitList;
+	}
+	
 	
 }

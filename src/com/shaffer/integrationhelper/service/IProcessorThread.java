@@ -13,6 +13,7 @@ public interface IProcessorThread {
 	public void run();
 	public void setPayrollSystem(String payrollSystem);
 	public void setFilePath(String filePath);
-	public List<InCodeEmployee> getEmployeeList();
-	public String ParsedLines();
+	public void setFileType(String fileType);
+	public List<?> getEmployeeList();
+	public List<?> getBenefitList();
 }

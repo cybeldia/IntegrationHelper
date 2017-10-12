@@ -14,6 +14,9 @@ public class ErrorEvent extends ApplicationEvent {
 	}
 	
 	public List<String> getError() {
+		if(error.isEmpty()) {
+			error.add("No errors found in file");
+		}
 		return error;
 	}
 

@@ -10,7 +10,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 
 import com.shaffer.integrationhelper.controller.*;
-import com.shaffer.integrationhelper.diconfiguration.DIConfiguration;
 import com.shaffer.integrationhelper.model.*;
 import com.shaffer.integrationhelper.service.IProcessorThread;
 import com.shaffer.integrationhelper.service.impl.Validator;

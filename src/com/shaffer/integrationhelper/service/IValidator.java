@@ -11,6 +11,6 @@ import com.shaffer.integrationhelper.model.InCodeEmployee;
 @Service
 public interface IValidator {
 	
-	public List<String> ICValidate(String enteredDepartments, String enteredEmployeeTypes, String enteredEmployeeStatus, String enteredPayPeriods, List<InCodeEmployee> employees);
+	public List<String> Validate(String fileType,String enteredDepartments, String enteredEmployeeTypes, String enteredEmployeeStatus, String enteredPayPeriods, List<?> employees);
 
 }

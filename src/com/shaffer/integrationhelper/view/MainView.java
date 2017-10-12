@@ -30,6 +30,7 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
@@ -45,30 +46,30 @@ import net.proteanit.sql.DbUtils;
 
 @Component
 public class MainView implements ApplicationListener<ErrorEvent> {
-	
-	//JFrame
+
+	// JFrame
 	private JFrame frmIntegrationAssistant;
-	//Text Fields
+	// Text Fields
 	private JTextField serverXmlTextField;
 	private JTextField fileText;
-	//Text Area
+	// Text Area
 	private JTextArea parsedLinesTextArea;
 	private JTextArea errorsTextArea;
-	//Combo Boxes
+	// Combo Boxes
 	private JComboBox<String> payrollComboBox;
 	private JComboBox<String> fileTypeComboBox;
 	private JComboBox<String> versionComboBox;
-	//??
+	// ??
 	@Autowired
 	private EmployeeOptionsView employeeOptionsView;
-	//Tables
+	// Tables
 	private JTable table;
-	//Check Boxes
+	// Check Boxes
 	private JCheckBox scheduledJobsCheckBox;
 	private JCheckBox departmentsCheckBox;
 	private JCheckBox locationCheckBox;
 	private JCheckBox adminPropertiesCheckBox;
-	//Buttons
+	// Buttons
 	private JButton btnEmployeeCheckerSettings;
 	private JButton btnChooseFile;
 	private JButton btnChooseFileServer;
@@ -78,8 +79,8 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 	private JButton btnProcess;
 
 	public MainView() throws Exception {
-		
-		BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow; 
+
+		BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
 		UIManager.put("RootPane.setupButtonVisible", false);
 		org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
 		frmIntegrationAssistant = new JFrame();
@@ -105,67 +106,68 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Settings", null, panel, null);
-		panel.setLayout(new MigLayout("", "[28px][][][][grow][][][][]", "[][][][20px][][][][][][][][][]"));
-		panel.add(payrollComboBox, "cell 1 3,alignx left,aligny top");
+		panel.setLayout(
+				new MigLayout("", "[1px][187px][71px]", "[2px][17px][20px][20px][20px][17px][21px][21px][21px][21px]"));
+
+		JSeparator separator_5 = new JSeparator();
+		panel.add(separator_5, "cell 0 0,growx,aligny top");
 
 		JLabel lblGeneral = new JLabel("General:");
 		lblGeneral.setFont(new Font("Tahoma", Font.BOLD, 14));
-		panel.add(lblGeneral, "cell 0 0");
+		panel.add(lblGeneral, "cell 1 1,alignx left,aligny top");
+		panel.add(payrollComboBox, "cell 2 2,alignx left,aligny top");
 
 		JLabel lblPayrollSystem = new JLabel("Payroll System:");
 		lblPayrollSystem.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblPayrollSystem, "cell 0 3,alignx left");
-
-		JSeparator separator_2 = new JSeparator();
-		panel.add(separator_2, "cell 0 4 9 1");
+		panel.add(lblPayrollSystem, "cell 1 2,alignx left,aligny center");
 
 		JLabel lblFileType = new JLabel("File Type:");
 		lblFileType.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblFileType, "cell 0 5,alignx left");
+		panel.add(lblFileType, "cell 1 3,alignx left,aligny top");
 
 		fileTypeComboBox = new JComboBox<String>();
 		fileTypeComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Employee", "Benefit", "Accounts" }));
-		panel.add(fileTypeComboBox, "cell 1 5,alignx left");
+		panel.add(fileTypeComboBox, "cell 2 3,alignx left,aligny top");
 
 		JLabel lblExecutimeVersion = new JLabel("ExecuTime Version:");
 		lblExecutimeVersion.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblExecutimeVersion, "cell 0 6,alignx left");
+		panel.add(lblExecutimeVersion, "cell 1 4,alignx left,aligny top");
 
 		versionComboBox = new JComboBox<String>();
 		versionComboBox.setModel(new DefaultComboBoxModel(new String[] { "4.x", "5.x" }));
-		panel.add(versionComboBox, "cell 1 6,alignx left");
+		panel.add(versionComboBox, "cell 2 4,alignx left,aligny top");
 
 		JLabel lblDatabaseConfigSettings = new JLabel("Database Config Settings:");
 		lblDatabaseConfigSettings.setFont(new Font("Tahoma", Font.BOLD, 14));
-		panel.add(lblDatabaseConfigSettings, "cell 0 8");
+		panel.add(lblDatabaseConfigSettings, "cell 1 5,alignx left,aligny top");
 
 		JLabel lblCreateScheduledJobs = new JLabel("Create scheduled jobs");
 		lblCreateScheduledJobs.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblCreateScheduledJobs, "cell 0 9");
+		panel.add(lblCreateScheduledJobs, "cell 1 6,alignx left,aligny center");
 
 		scheduledJobsCheckBox = new JCheckBox("");
-		panel.add(scheduledJobsCheckBox, "cell 1 9");
+		panel.add(scheduledJobsCheckBox, "cell 2 6,alignx left,aligny top");
 
 		JLabel lblSetupDefaultDepartments = new JLabel("Setup default departments");
 		lblSetupDefaultDepartments.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblSetupDefaultDepartments, "cell 0 10");
+		panel.add(lblSetupDefaultDepartments, "cell 1 7,alignx left,aligny center");
 
 		departmentsCheckBox = new JCheckBox("");
-		panel.add(departmentsCheckBox, "cell 1 10");
+		panel.add(departmentsCheckBox, "cell 2 7,alignx left,aligny top");
 
 		JLabel lblSetupDefaultLocations = new JLabel("Setup default Locations");
 		lblSetupDefaultLocations.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblSetupDefaultLocations, "cell 0 11");
+		panel.add(lblSetupDefaultLocations, "cell 1 8,alignx left,aligny center");
 
 		locationCheckBox = new JCheckBox("");
-		panel.add(locationCheckBox, "cell 1 11");
+		panel.add(locationCheckBox, "cell 2 8,alignx left,aligny top");
 
 		JLabel lblSetupDefaultAdmin = new JLabel("Setup default admin properties");
 		lblSetupDefaultAdmin.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		panel.add(lblSetupDefaultAdmin, "cell 0 12");
+		panel.add(lblSetupDefaultAdmin, "cell 1 9,alignx left,aligny center");
 
 		adminPropertiesCheckBox = new JCheckBox("");
-		panel.add(adminPropertiesCheckBox, "cell 1 12");
+		panel.add(adminPropertiesCheckBox, "cell 2 9,alignx left,aligny top");
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Flat File Helper", null, panel_1, null);
@@ -190,7 +192,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		JScrollPane errorsPane = new JScrollPane();
 		tabbedPane_1.addTab("Errors", null, errorsPane, null);
 
-		 errorsTextArea = new JTextArea();
+		errorsTextArea = new JTextArea();
 		errorsPane.setViewportView(errorsTextArea);
 
 		JScrollPane parsedLinesPane = new JScrollPane();
@@ -251,18 +253,18 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		fileText.setColumns(25);
 
 	}
+
 	
-	@EventListener
 	public void onApplicationEvent(ErrorEvent event) {
-		for(String string : event.getError()) {
+		for (String string : event.getError()) {
 			errorsTextArea.append(string);
 		}
 	}
-	
+
 	@EventListener
 	public void onApplicationEvent(ParsedLineEvent event) {
 		String employee;
-		for(InCodeEmployee inCodeEmployee : event.getInCodeLines()) {
+		for (Object inCodeEmployee : event.getLines()) {
 			employee = inCodeEmployee.toString();
 			parsedLinesTextArea.append(employee);
 		}

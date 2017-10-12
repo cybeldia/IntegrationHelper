@@ -1,4 +1,4 @@
-package com.shaffer.integrationhelper.diconfiguration;
+package com.shaffer.integrationhelper;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

@@ -55,18 +55,18 @@ public class MainController {
 
 	// Initialize Controller
 	public void initialize() {
-		FlatFileValidationSettings();
-		FlatFilePicker();
-		ServerXMLPicker();
-		PopulateDefaults();
-		SetEmployeeValidationFields();
-		ProcessFlatFile();
-		TestDBConnection();
-		ExecuteQuery();
+		flatFileValidationSettings();
+		flatFilePicker();
+		serverXMLPicker();
+		populateDefaults();
+		setEmployeeValidationFields();
+		processFlatFile();
+		testDBConnection();
+		executeQuery();
 	}
 
 	// Flat file validation Settings button
-	public void FlatFileValidationSettings() {
+	public void flatFileValidationSettings() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				employeeOptionsView.setVisible(true);
@@ -76,7 +76,7 @@ public class MainController {
 	}
 
 	// Flat file picker
-	public void FlatFilePicker() {
+	public void flatFilePicker() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
@@ -93,22 +93,22 @@ public class MainController {
 	}
 
 	// Process flat file
-	public void ProcessFlatFile() {
+	public void processFlatFile() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String payrollSystem = mainView.getPayrollComboBox().getSelectedItem().toString();
 				String filePath = mainView.getFileText().getText();
+				String fileType = mainView.getFileTypeComboBox().getSelectedItem().toString();
 
 				mainView.getErrorsTextArea().setText("");
 				mainView.getParsedLinesTextArea().setText("");
 				try {
 					processor.setPayrollSystem(payrollSystem);
 					processor.setFilePath(filePath);
+					processor.setFileType(fileType);
 					processor.run();
-
-					if (payrollSystem == "InCode") {
-						ValidateInCode();
-					}
+					
+					validateFile();
 
 				} catch (Exception exception) {
 					mainView.getErrorsTextArea().setText("Error with file. Please check formatting");
@@ -119,7 +119,7 @@ public class MainController {
 	}
 
 	// Server XML File Picker
-	public void ServerXMLPicker() {
+	public void serverXMLPicker() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
@@ -136,7 +136,7 @@ public class MainController {
 	}
 
 	// Add Test Database Connection
-	public void TestDBConnection() {
+	public void testDBConnection() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -157,12 +157,12 @@ public class MainController {
 		mainView.getBtnTestDatabaseConnection().addActionListener(actionListener);
 	}
 
-	public void ExecuteQuery() {
+	public void executeQuery() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					XMLToDBConnection connection = new XMLToDBConnection();
-					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().toString());
+					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().getText());
 					QueryExecuter executer = new QueryExecuter(mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
 					executer.ExecuteMappingQuery();
 					if (mainView.getScheduledJobsCheckBox().isSelected()) {
@@ -179,7 +179,7 @@ public class MainController {
 	}
 
 	// Populate payroll defaults
-	public void PopulateDefaults() {
+	public void populateDefaults() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (mainView.getPayrollComboBox().getSelectedItem().toString().equals("InCode")) {
@@ -193,15 +193,15 @@ public class MainController {
 
 	}
 
-	public void ValidateInCode() {
-		List<InCodeEmployee> employees = processor.getEmployeeList();
-		validator.ICValidate(employeeOptionsView.getDepartmentsTextField().getText(),
+	public void validateFile() {
+		List<?> employees = processor.getEmployeeList();
+		validator.Validate(mainView.getFileTypeComboBox().getSelectedItem().toString(), employeeOptionsView.getDepartmentsTextField().getText(),
 				employeeOptionsView.getEmployeeTypesTextField().getText(),
 				employeeOptionsView.getEmployeeStatusTextField().getText(),
 				employeeOptionsView.getPayPeriodTextField().getText(), employees);
 	}
 
-	public void SetEmployeeValidationFields() {
+	public void setEmployeeValidationFields() {
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				employeeOptionsView.setVisible(false);

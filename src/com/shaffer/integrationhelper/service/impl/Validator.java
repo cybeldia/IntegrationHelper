@@ -29,9 +29,9 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
-
-	public List<String> ICValidate(String enteredDepartments, String enteredEmployeeTypes, String enteredEmployeeStatus,
-			String enteredPayPeriods, List<InCodeEmployee> employees) {
+	//Create method to determine validation.
+	public List<String> Validate(String fileType, String enteredDepartments, String enteredEmployeeTypes, String enteredEmployeeStatus,
+			String enteredPayPeriods, List<?> employees) {
 
 		// Save overall Errors
 		List<String> errorsList = new ArrayList<String>();
@@ -54,7 +54,8 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 		}
 
 		if (employees != null) {
-			for (InCodeEmployee employee : employees) {
+			for (Object employeeObject : employees) {
+					InCodeEmployee employee = (InCodeEmployee) employeeObject;
 				if (!departments.contains(employee.getDepartment().toString()) && !enteredDepartments.trim().isEmpty()) {
 					errorsList.add("The department " + employee.getDepartment().toString() + " is incorrect."
 							+ System.lineSeparator());
@@ -75,7 +76,7 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 							+ System.lineSeparator());
 				}
 				
-				if(!(isValidDate(employee, "MM/dd/yyyy"))) {
+				if(!(isValidDate(employee.getBirthDate(), "MM/dd/yyyy"))) {
 					errorsList.add("The date " + employee.getBirthDate().toString() + " is incorrectly formatted."
 							+ System.lineSeparator());
 				}
@@ -85,10 +86,10 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 		return errorsList;
 	}
 
-	public Boolean isValidDate(InCodeEmployee employee, String dateFormat) {
-		if (employee != null) {
+	public Boolean isValidDate(String date, String dateFormat) {
+		if (date != null) {
 			try {
-				TemporalAccessor ta = DateTimeFormatter.ofPattern(dateFormat).parse(employee.getBirthDate());
+				TemporalAccessor ta = DateTimeFormatter.ofPattern(dateFormat).parse(date);
 			} catch (Exception e) {
 				return false;
 			}
