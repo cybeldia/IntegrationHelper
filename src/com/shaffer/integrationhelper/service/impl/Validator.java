@@ -29,6 +29,7 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
+	
 	//Create method to determine validation.
 	public List<String> Validate(String fileType, String enteredDepartments, String enteredEmployeeTypes, String enteredEmployeeStatus,
 			String enteredPayPeriods, List<?> employees) {
@@ -55,6 +56,7 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 
 		if (employees != null) {
 			for (Object employeeObject : employees) {
+				if(fileType.equals("InCode")) {
 					InCodeEmployee employee = (InCodeEmployee) employeeObject;
 				if (!departments.contains(employee.getDepartment().toString()) && !enteredDepartments.trim().isEmpty()) {
 					errorsList.add("The department " + employee.getDepartment().toString() + " is incorrect."
@@ -78,13 +80,16 @@ public class Validator implements IValidator, ApplicationEventPublisherAware {
 				
 				if(!(isValidDate(employee.getBirthDate(), "MM/dd/yyyy"))) {
 					errorsList.add("The date " + employee.getBirthDate().toString() + " is incorrectly formatted."
-							+ System.lineSeparator());
+								+ System.lineSeparator());
 				}
+			}
 			}
 		}
 		this.applicationEventPublisher.publishEvent(new ErrorEvent(this, errorsList));
 		return errorsList;
 	}
+	
+	
 
 	public Boolean isValidDate(String date, String dateFormat) {
 		if (date != null) {

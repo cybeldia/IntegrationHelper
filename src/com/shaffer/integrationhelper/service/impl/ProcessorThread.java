@@ -19,6 +19,7 @@ import com.shaffer.integrationhelper.events.ParsedLineEvent;
 import com.shaffer.integrationhelper.model.InCodeBenefit;
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 import com.shaffer.integrationhelper.service.IProcessorThread;
+import com.shaffer.integrationhelper.service.IValidator;
 
 //Class should control what processor to use based on the payroll system
 
@@ -29,6 +30,7 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 	private String fileType;
 	private List<?> employeeList;
 	private List<?> benefitList;
+
 
 	private ApplicationEventPublisher applicationEventPublisher = null;
 
