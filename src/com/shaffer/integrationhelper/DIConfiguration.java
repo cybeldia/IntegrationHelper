@@ -5,32 +5,28 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.shaffer.integrationhelper.controller.MainController;
-import com.shaffer.integrationhelper.service.IProcessorThread;
+import com.shaffer.integrationhelper.service.IProcessor;
 import com.shaffer.integrationhelper.service.IValidator;
-import com.shaffer.integrationhelper.service.impl.InCodeProcessor;
+import com.shaffer.integrationhelper.service.impl.InCodeValidator;
 import com.shaffer.integrationhelper.service.impl.ProcessorThread;
-import com.shaffer.integrationhelper.service.impl.Validator;
-import com.shaffer.integrationhelper.view.MainView;
 
 @Configuration
-@ComponentScan(basePackages = {
-		"com.shaffer.integrationhelper",
-		"com.shaffer.integrationhelper.controller",
-		"com.shaffer.integrationhelper.model",
-		"com.shaffer.integrationhelper.service",
-		"com.shaffer.integrationhelper.service.impl",
-		"com.shaffer.integrationhelper.view"	
-})
+@ComponentScan(basePackages = { "com.shaffer.integrationhelper", "com.shaffer.integrationhelper.controller",
+		"com.shaffer.integrationhelper.model", "com.shaffer.integrationhelper.service",
+		"com.shaffer.integrationhelper.service.impl", "com.shaffer.integrationhelper.view" })
 public class DIConfiguration {
 	@Bean
 	public MainController mainController() {
 		return new MainController(null, null);
 	}
+
 	@Bean
-	public IProcessorThread processorThreadService() {
+	public IProcessor processorThreadService() {
 		return new ProcessorThread();
 	}
-	@Bean public IValidator validator() {
-		return new Validator();
+
+	@Bean
+	public IValidator validator() {
+		return new InCodeValidator();
 	}
 }

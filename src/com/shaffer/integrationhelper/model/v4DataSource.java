@@ -5,62 +5,60 @@ import org.simpleframework.xml.Root;
 
 @Root
 public class v4DataSource {
-	
-	@Element(name="local-tx-datasource")
+
+	@Element(name = "local-tx-datasource")
 	private String localTXDatasource;
-	
-	@Element(name="jndi-name")
+
+	@Element(name = "jndi-name")
 	private String jndiName;
-	
-	@Element(name="connection-url")
+
+	@Element(name = "connection-url")
 	private String connectionURL;
-	
-	@Element(name="driver-class")
+
+	@Element(name = "driver-class")
 	private String driverClass;
 
-	@Element(name="user-name")
+	@Element(name = "user-name")
 	private String userName;
-	
-	@Element(name="password")
+
+	@Element(name = "password")
 	private String password;
-	
-	@Element(name="autoReconnect", required=false)
+
+	@Element(name = "autoReconnect", required = false)
 	private String autoReconnect;
-	
-	@Element(name="check-valid-connection-sql", required=false)
+
+	@Element(name = "check-valid-connection-sql", required = false)
 	private String checkValid;
-	
-	@Element(name="failOverReadOnly", required=false)
+
+	@Element(name = "failOverReadOnly", required = false)
 	private String failOverReadOnly;
-	
-	@Element(name="initialTimeout", required=false)
+
+	@Element(name = "initialTimeout", required = false)
 	private String initialTimeout;
-	
-	@Element(name="min-pool-size", required=false)
+
+	@Element(name = "min-pool-size", required = false)
 	private String minPool;
-	
-	@Element(name="max-pool-size", required=false)
+
+	@Element(name = "max-pool-size", required = false)
 	private String maxPool;
-	
-	@Element(name="blocking-timeout-millis", required=false)
+
+	@Element(name = "blocking-timeout-millis", required = false)
 	private String blockingTimeout;
-	
-	@Element(name="idle-timeout-minutes", required=false)
+
+	@Element(name = "idle-timeout-minutes", required = false)
 	private String idleTimeOut;
-	
-	@Element(name="set-tx-query-timeout",required=false)
+
+	@Element(name = "set-tx-query-timeout", required = false)
 	private String setTxQuery;
-	
-	@Element(name="query-timeout", required=false)
+
+	@Element(name = "query-timeout", required = false)
 	private String queryTimeout;
-	
-	@Element(name="metadata", required=false)
+
+	@Element(name = "metadata", required = false)
 	private String metaData;
-	
-	@Element(name="type-mapping", required=false)
+
+	@Element(name = "type-mapping", required = false)
 	private String typeMapping;
-	
-	
 
 	public String getConnectionURL() {
 		return connectionURL;

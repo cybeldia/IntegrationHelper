@@ -3,35 +3,28 @@ package com.shaffer.integrationhelper.service.impl;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 import com.opencsv.CSVReader;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.shaffer.integrationhelper.model.InCodeBenefit;
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-public class InCodeProcessor {
+public class InCodeProcessor implements ApplicationEventPublisherAware {
 
 	private List<InCodeEmployee> employeeList;
-	private List<InCodeBenefit>  benefitList;
+	private List<InCodeBenefit> benefitList;
+	private ApplicationEventPublisher applicationEventPublisher = null;
+
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
 
 	public void processEmployee(String filePath) throws IllegalStateException, FileNotFoundException, IOException {
 		// Validator handles the actual parsing of the InCode file.
@@ -48,7 +41,7 @@ public class InCodeProcessor {
 
 		}
 	}
-	
+
 	public void processBenefit(String filePath) throws IllegalStateException, FileNotFoundException, IOException {
 		// Validator handles the actual parsing of the InCode file.
 		int expectedColumnCount = 3;
@@ -85,10 +78,9 @@ public class InCodeProcessor {
 	public List<InCodeEmployee> getEmployeeList() {
 		return employeeList;
 	}
-	
-	public List<InCodeBenefit> getBenefitList(){
+
+	public List<InCodeBenefit> getBenefitList() {
 		return benefitList;
 	}
-	
-	
+
 }

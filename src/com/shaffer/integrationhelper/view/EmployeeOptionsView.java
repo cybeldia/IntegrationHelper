@@ -2,11 +2,6 @@ package com.shaffer.integrationhelper.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -27,6 +22,7 @@ public class EmployeeOptionsView extends JDialog {
 	private JTextField employeeTypesTextField;
 	private JTextField employeeStatusTextField;
 	private JTextField departmentsTextField;
+	private JTextField benefitTextField;
 	private JButton okButton;
 	private JButton cancelButton;
 
@@ -87,7 +83,7 @@ public class EmployeeOptionsView extends JDialog {
 			{
 				okButton = new JButton("OK");
 
-			    okButton.setActionCommand("OK");
+				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
@@ -138,6 +134,10 @@ public class EmployeeOptionsView extends JDialog {
 
 	public void setDepartmentsTextField(JTextField departmentsTextField) {
 		this.departmentsTextField = departmentsTextField;
+	}
+	
+	public JTextField getBenefitTextField() {
+		return benefitTextField;
 	}
 
 	public JButton getOkButton() {

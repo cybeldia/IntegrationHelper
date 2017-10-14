@@ -1,36 +1,36 @@
 package com.shaffer.integrationhelper.service.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.JTextArea;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import com.shaffer.integrationhelper.controller.*;
-import com.shaffer.integrationhelper.events.ErrorEvent;
 import com.shaffer.integrationhelper.events.ParsedLineEvent;
-import com.shaffer.integrationhelper.model.InCodeBenefit;
-import com.shaffer.integrationhelper.model.InCodeEmployee;
-import com.shaffer.integrationhelper.service.IProcessorThread;
+import com.shaffer.integrationhelper.model.ApplicationSettings;
+import com.shaffer.integrationhelper.service.IProcessor;
 import com.shaffer.integrationhelper.service.IValidator;
 
 //Class should control what processor to use based on the payroll system
 
-public class ProcessorThread implements Runnable, IProcessorThread, ApplicationEventPublisherAware {
+public class ProcessorThread implements Runnable, IProcessor, ApplicationEventPublisherAware {
+	@Autowired
+	private ApplicationSettings applicationSettings;
+	@Autowired
+	private IValidator validator;
 
 	private String payrollSystem;
 	private String filePath;
 	private String fileType;
+
+	private String payPeriods;
+	private String employeeTypes;
+	private String employeeStatus;
+	private String departments;
+
 	private List<?> employeeList;
 	private List<?> benefitList;
-
 
 	private ApplicationEventPublisher applicationEventPublisher = null;
 
@@ -41,13 +41,28 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 
 	@Override
 	public void run() {
+
+		// Get settings
+		payrollSystem = applicationSettings.getPayrollSystem();
+		fileType = applicationSettings.getFileType();
+		filePath = applicationSettings.getFlatFileTextField();
+
+		payPeriods = applicationSettings.getPayPeriods();
+		employeeTypes = applicationSettings.getEmployeeTypes();
+		employeeStatus = applicationSettings.getEmployeeStatus();
+		departments = applicationSettings.getDepartments();
+
+		// Determine payroll system and file type
+		// InCode Logic
 		if (payrollSystem.equals("InCode")) {
 			InCodeProcessor inCodeProcessor = new InCodeProcessor();
 			try {
 				if (fileType.equals("Employee")) {
 					inCodeProcessor.processEmployee(filePath);
 					employeeList = inCodeProcessor.getEmployeeList();
+					validator.validateEmployee(employeeList, departments, employeeTypes, employeeStatus, payPeriods);
 					this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, employeeList));
+
 				} else if (fileType.equals("Benefit")) {
 					inCodeProcessor.processBenefit(filePath);
 					benefitList = inCodeProcessor.getBenefitList();
@@ -63,6 +78,7 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 		return payrollSystem;
 	}
 
+	@Override
 	public void setPayrollSystem(String payrollSystem) {
 		this.payrollSystem = payrollSystem;
 	}
@@ -71,10 +87,12 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 		return filePath;
 	}
 
+	@Override
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
 
+	@Override
 	public List<?> getEmployeeList() {
 		return employeeList;
 	}
@@ -83,6 +101,7 @@ public class ProcessorThread implements Runnable, IProcessorThread, ApplicationE
 		return fileType;
 	}
 
+	@Override
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}

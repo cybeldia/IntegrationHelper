@@ -3,26 +3,21 @@ package com.shaffer.integrationhelper.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
-import com.shaffer.integrationhelper.model.*;
-import com.shaffer.integrationhelper.service.IProcessorThread;
+import com.shaffer.integrationhelper.model.ApplicationSettings;
+import com.shaffer.integrationhelper.model.PayrollDefaults;
+import com.shaffer.integrationhelper.service.IProcessor;
 import com.shaffer.integrationhelper.service.IValidator;
 import com.shaffer.integrationhelper.service.impl.QueryExecuter;
 import com.shaffer.integrationhelper.service.impl.XMLToDBConnection;
-import com.shaffer.integrationhelper.view.*;
+import com.shaffer.integrationhelper.view.EmployeeOptionsView;
+import com.shaffer.integrationhelper.view.MainView;
 
 import net.proteanit.sql.DbUtils;
 
@@ -32,20 +27,13 @@ public class MainController {
 	private EmployeeOptionsView employeeOptionsView;
 	private ActionListener actionListener;
 
-	private List<String> payPeriods;
-	private List<String> employeeTypes;
-	private List<String> employeeStatus;
-	private List<String> departments;
-
-	private List<String> inCorrectPayPeriods;
-	private List<String> inCorrectDepartments;
-	private List<String> inCorrectEmployeeTypes;
-	private List<String> inCorrectEmployeeStatus;
-
 	@Autowired
-	private IProcessorThread processor;
+	private IProcessor processor;
 	@Autowired
 	private IValidator validator;
+
+	@Autowired
+	private ApplicationSettings applicationSettings;
 
 	public MainController(MainView mainView, EmployeeOptionsView employeeOptionsView) {
 		this.mainView = mainView;
@@ -53,21 +41,24 @@ public class MainController {
 
 	}
 
-	// Initialize Controller
+	// Initialize Controller -- add event functions here
 	public void initialize() {
 		flatFileValidationSettings();
 		flatFilePicker();
 		serverXMLPicker();
 		populateDefaults();
-		setEmployeeValidationFields();
+		setValidationFields();
 		processFlatFile();
 		testDBConnection();
 		executeQuery();
+		setPayrollSystem();
+		setFileType();
 	}
 
 	// Flat file validation Settings button
 	public void flatFileValidationSettings() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				employeeOptionsView.setVisible(true);
 			}
@@ -78,6 +69,7 @@ public class MainController {
 	// Flat file picker
 	public void flatFilePicker() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
 
@@ -95,23 +87,18 @@ public class MainController {
 	// Process flat file
 	public void processFlatFile() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				String payrollSystem = mainView.getPayrollComboBox().getSelectedItem().toString();
-				String filePath = mainView.getFileText().getText();
-				String fileType = mainView.getFileTypeComboBox().getSelectedItem().toString();
-
 				mainView.getErrorsTextArea().setText("");
 				mainView.getParsedLinesTextArea().setText("");
 				try {
-					processor.setPayrollSystem(payrollSystem);
-					processor.setFilePath(filePath);
-					processor.setFileType(fileType);
+					applicationSettings.setFlatFileTextField(mainView.getFileText().getText());
 					processor.run();
-					
-					validateFile();
 
 				} catch (Exception exception) {
-					mainView.getErrorsTextArea().setText("Error with file. Please check formatting");
+					// mainView.getErrorsTextArea().setText("Error with file. Please check
+					// formatting");
+					exception.printStackTrace();
 				}
 			}
 		};
@@ -121,6 +108,7 @@ public class MainController {
 	// Server XML File Picker
 	public void serverXMLPicker() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
 
@@ -138,11 +126,13 @@ public class MainController {
 	// Add Test Database Connection
 	public void testDBConnection() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					XMLToDBConnection connection = new XMLToDBConnection();
 					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().getText());
-					QueryExecuter executer = new QueryExecuter(mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
+					QueryExecuter executer = new QueryExecuter(
+							mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
 					mainView.getTable().setModel(DbUtils.resultSetToTableModel(executer.GetCurrentMapping()));
 					conn.close();
 					JOptionPane.showMessageDialog(null, "Connection successful");
@@ -159,11 +149,13 @@ public class MainController {
 
 	public void executeQuery() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					XMLToDBConnection connection = new XMLToDBConnection();
 					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().getText());
-					QueryExecuter executer = new QueryExecuter(mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
+					QueryExecuter executer = new QueryExecuter(
+							mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
 					executer.ExecuteMappingQuery();
 					if (mainView.getScheduledJobsCheckBox().isSelected()) {
 						executer.CreateScheduledJobs();
@@ -181,6 +173,7 @@ public class MainController {
 	// Populate payroll defaults
 	public void populateDefaults() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (mainView.getPayrollComboBox().getSelectedItem().toString().equals("InCode")) {
 					PayrollDefaults pd = new PayrollDefaults();
@@ -193,22 +186,42 @@ public class MainController {
 
 	}
 
-	public void validateFile() {
-		List<?> employees = processor.getEmployeeList();
-		validator.Validate(mainView.getFileTypeComboBox().getSelectedItem().toString(), employeeOptionsView.getDepartmentsTextField().getText(),
-				employeeOptionsView.getEmployeeTypesTextField().getText(),
-				employeeOptionsView.getEmployeeStatusTextField().getText(),
-				employeeOptionsView.getPayPeriodTextField().getText(), employees);
-	}
-
-	public void setEmployeeValidationFields() {
+	public void setValidationFields() {
 		actionListener = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
+				applicationSettings.setDepartments(employeeOptionsView.getDepartmentsTextField().getText());
+				applicationSettings.setPayPeriods(employeeOptionsView.getPayPeriodTextField().getText());
+				applicationSettings.setEmployeeStatus(employeeOptionsView.getEmployeeStatusTextField().getText());
+				applicationSettings.setEmployeeTypes(employeeOptionsView.getEmployeeTypesTextField().getText());
 				employeeOptionsView.setVisible(false);
 			}
 		};
 		employeeOptionsView.getOkButton().addActionListener(actionListener);
 
+	}
+
+	// Handle changing app settings
+	public void setPayrollSystem() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				applicationSettings.setPayrollSystem(mainView.getPayrollComboBox().getSelectedItem().toString());
+				System.out.println(applicationSettings.getPayrollSystem());
+
+			}
+		};
+		mainView.getPayrollComboBox().addActionListener(actionListener);
+	}
+
+	public void setFileType() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				applicationSettings.setFileType(mainView.getFileTypeComboBox().getSelectedItem().toString());
+			}
+		};
+		mainView.getFileTypeComboBox().addActionListener(actionListener);
 	}
 
 	public void setMainView(MainView mainView) {

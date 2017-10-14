@@ -2,23 +2,16 @@ package com.shaffer.integrationhelper.view;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -26,23 +19,23 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
-import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
 
 import com.shaffer.integrationhelper.events.ErrorEvent;
 import com.shaffer.integrationhelper.events.ParsedLineEvent;
-import com.shaffer.integrationhelper.model.InCodeEmployee;
 
 import net.miginfocom.swing.MigLayout;
-import net.proteanit.sql.DbUtils;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 @Component
 public class MainView implements ApplicationListener<ErrorEvent> {
@@ -98,28 +91,27 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		mnHelp.add(mntmAbout);
 		frmIntegrationAssistant.getContentPane().setLayout(new BorderLayout(0, 0));
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
 		frmIntegrationAssistant.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-
-		payrollComboBox = new JComboBox<String>();
-		payrollComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "InCode", "Generic" }));
 
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Settings", null, panel, null);
-		panel.setLayout(
-				new MigLayout("", "[1px][187px][71px]", "[2px][17px][20px][20px][20px][17px][21px][21px][21px][21px]"));
+		panel.setLayout(new MigLayout("", "[1px][187px][71px]", "[1px][17px][20px][20px][20px][17px][21px][21px][21px][21px]"));
 
 		JSeparator separator_5 = new JSeparator();
-		panel.add(separator_5, "cell 0 0,growx,aligny top");
+		panel.add(separator_5, "cell 0 0,alignx left,growy");
 
 		JLabel lblGeneral = new JLabel("General:");
 		lblGeneral.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel.add(lblGeneral, "cell 1 1,alignx left,aligny top");
-		panel.add(payrollComboBox, "cell 2 2,alignx left,aligny top");
 
 		JLabel lblPayrollSystem = new JLabel("Payroll System:");
 		lblPayrollSystem.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblPayrollSystem, "cell 1 2,alignx left,aligny center");
+
+		payrollComboBox = new JComboBox<String>();
+		payrollComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "InCode", "Generic" }));
+		panel.add(payrollComboBox, "cell 2 2,alignx left,aligny top");
 
 		JLabel lblFileType = new JLabel("File Type:");
 		lblFileType.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -185,7 +177,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		JSeparator separator = new JSeparator();
 		panel_1.add(separator, "cell 0 12");
 
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabbedPane_1 = new JTabbedPane(SwingConstants.TOP);
 		panel_1.add(tabbedPane_1, "cell 0 13 1 4,grow");
 		tabbedPane_1.setOpaque(true);
 
@@ -254,7 +246,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 
 	}
 
-	
+	@Override
 	public void onApplicationEvent(ErrorEvent event) {
 		for (String string : event.getError()) {
 			errorsTextArea.append(string);

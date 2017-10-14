@@ -1,16 +1,14 @@
 package com.shaffer.integrationhelper.model;
+
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 public class PayrollDefaults {
-	
+
 	public JTable setInCodeDefaults(JTable tbl) {
-		
-		if ((tbl.getRowCount() > 0) && (tbl.getColumnCount() > 0))
-		{
-			tbl.setValueAt("employeeId", 1, 6); 
-			tbl.setValueAt("lastName", 2, 6); 
+
+		if ((tbl.getRowCount() > 0) && (tbl.getColumnCount() > 0)) {
+			tbl.setValueAt("employeeId", 1, 6);
+			tbl.setValueAt("lastName", 2, 6);
 			tbl.setValueAt("firstName", 3, 6);
 			tbl.setValueAt("phoneNumber", 4, 6);
 			tbl.setValueAt("nameLogin", 6, 6);
