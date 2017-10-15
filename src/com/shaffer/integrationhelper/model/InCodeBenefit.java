@@ -39,6 +39,6 @@ public class InCodeBenefit implements Serializable {
 	@Override
 	public String toString() {
 		return "InCodeBenefit [employeeNumber=" + employeeNumber + ", hoursCode=" + hoursCode + ", currentBalance="
-				+ currentBalance + "]";
+				+ currentBalance + "]" + System.lineSeparator();
 	}
 }

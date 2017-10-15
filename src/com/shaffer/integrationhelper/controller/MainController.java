@@ -16,6 +16,7 @@ import com.shaffer.integrationhelper.service.IProcessor;
 import com.shaffer.integrationhelper.service.IValidator;
 import com.shaffer.integrationhelper.service.impl.QueryExecuter;
 import com.shaffer.integrationhelper.service.impl.XMLToDBConnection;
+import com.shaffer.integrationhelper.view.BenefitOptionsView;
 import com.shaffer.integrationhelper.view.EmployeeOptionsView;
 import com.shaffer.integrationhelper.view.MainView;
 
@@ -25,20 +26,20 @@ import net.proteanit.sql.DbUtils;
 public class MainController {
 	private MainView mainView;
 	private EmployeeOptionsView employeeOptionsView;
+	private BenefitOptionsView benefitOptionsView;
 	private ActionListener actionListener;
 
 	@Autowired
 	private IProcessor processor;
 	@Autowired
 	private IValidator validator;
-
 	@Autowired
 	private ApplicationSettings applicationSettings;
 
-	public MainController(MainView mainView, EmployeeOptionsView employeeOptionsView) {
+	public MainController(MainView mainView, EmployeeOptionsView employeeOptionsView, BenefitOptionsView benefitOptionsView) {
 		this.mainView = mainView;
 		this.employeeOptionsView = employeeOptionsView;
-
+		this.benefitOptionsView = benefitOptionsView;
 	}
 
 	// Initialize Controller -- add event functions here
@@ -47,7 +48,8 @@ public class MainController {
 		flatFilePicker();
 		serverXMLPicker();
 		populateDefaults();
-		setValidationFields();
+		setEmployeeValidationFields();
+		setBenefitValidationFields();
 		processFlatFile();
 		testDBConnection();
 		executeQuery();
@@ -60,7 +62,11 @@ public class MainController {
 		actionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(applicationSettings.getFileType().equals("Employee")) {
 				employeeOptionsView.setVisible(true);
+				} else if(applicationSettings.getFileType().equals("Benefit")) {
+					benefitOptionsView.setVisible(true);
+				}
 			}
 		};
 		mainView.getBtnEmployeeCheckerSettings().addActionListener(actionListener);
@@ -92,6 +98,7 @@ public class MainController {
 				mainView.getErrorsTextArea().setText("");
 				mainView.getParsedLinesTextArea().setText("");
 				try {
+					System.out.println(applicationSettings.getBenefits());
 					applicationSettings.setFlatFileTextField(mainView.getFileText().getText());
 					processor.run();
 
@@ -186,7 +193,7 @@ public class MainController {
 
 	}
 
-	public void setValidationFields() {
+	public void setEmployeeValidationFields() {
 		actionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -198,6 +205,18 @@ public class MainController {
 			}
 		};
 		employeeOptionsView.getOkButton().addActionListener(actionListener);
+
+	}
+	
+	public void setBenefitValidationFields() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				applicationSettings.setBenefits(benefitOptionsView.getBenefitTextField().getText());
+				benefitOptionsView.setVisible(false);
+			}
+		};
+		benefitOptionsView.getOkButton().addActionListener(actionListener);
 
 	}
 
@@ -230,6 +249,9 @@ public class MainController {
 
 	public void setEmployeeOptionsView(EmployeeOptionsView employeeOptionsView) {
 		this.employeeOptionsView = employeeOptionsView;
+	}
+	public void setBenefitOptionsView(BenefitOptionsView benefitOptionsView) {
+		this.benefitOptionsView = benefitOptionsView;
 	}
 
 }

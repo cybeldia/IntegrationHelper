@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 import com.shaffer.integrationhelper.events.ErrorEvent;
+import com.shaffer.integrationhelper.model.InCodeBenefit;
 import com.shaffer.integrationhelper.model.InCodeEmployee;
 import com.shaffer.integrationhelper.service.IValidator;
 
@@ -19,6 +20,8 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 	private List<String> employeeTypes;
 	private List<String> employeeStatus;
 	private List<String> departments;
+	
+	private List<String> benefits;
 
 	private ApplicationEventPublisher applicationEventPublisher = null;
 
@@ -80,6 +83,30 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 
 				if (!(isValidDate(employee.getBirthDate(), "MM/dd/yyyy"))) {
 					errorsList.add("The date " + employee.getBirthDate().toString() + " is incorrectly formatted."
+							+ System.lineSeparator());
+				}
+			}
+		}
+
+		this.applicationEventPublisher.publishEvent(new ErrorEvent(this, errorsList));
+	}
+	
+	public void validateBenefit(List<?> benefitList, String enteredBenefits) {
+
+		// Save overall Errors
+		List<String> errorsList = new ArrayList<String>();
+
+		// Handle Benefits
+		if (enteredBenefits != null && !enteredBenefits.isEmpty()) {
+			benefits = new ArrayList<String>(Arrays.asList(enteredBenefits.split("\\s*,\\s*")));
+		}
+
+		if (benefits != null) {
+			for (Object benefitObject : benefitList) {
+				InCodeBenefit benefit = (InCodeBenefit)benefitObject;
+				if (!benefits.contains(benefit.getHoursCode().toString().trim())
+						&& !enteredBenefits.trim().isEmpty()) {
+					errorsList.add("The hours code " + benefit.getHoursCode().toString() + " is incorrect."
 							+ System.lineSeparator());
 				}
 			}

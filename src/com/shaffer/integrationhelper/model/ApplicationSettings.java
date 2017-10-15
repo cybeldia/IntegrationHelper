@@ -25,6 +25,8 @@ public class ApplicationSettings {
 	private String employeeTypes = " ";
 	private String employeeStatus = " ";
 	private String departments = " ";
+	
+	private String benefits = " ";
 
 	public String getPayrollSystem() {
 		return payrollSystem;
@@ -129,5 +131,14 @@ public class ApplicationSettings {
 	public void setDepartments(String departments) {
 		this.departments = departments;
 	}
+
+	public String getBenefits() {
+		return benefits;
+	}
+
+	public void setBenefits(String benefits) {
+		this.benefits = benefits;
+	}
+	
 
 }

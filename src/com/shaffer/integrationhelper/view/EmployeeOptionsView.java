@@ -22,7 +22,6 @@ public class EmployeeOptionsView extends JDialog {
 	private JTextField employeeTypesTextField;
 	private JTextField employeeStatusTextField;
 	private JTextField departmentsTextField;
-	private JTextField benefitTextField;
 	private JButton okButton;
 	private JButton cancelButton;
 
@@ -134,10 +133,6 @@ public class EmployeeOptionsView extends JDialog {
 
 	public void setDepartmentsTextField(JTextField departmentsTextField) {
 		this.departmentsTextField = departmentsTextField;
-	}
-	
-	public JTextField getBenefitTextField() {
-		return benefitTextField;
 	}
 
 	public JButton getOkButton() {

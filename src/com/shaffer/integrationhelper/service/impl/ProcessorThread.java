@@ -28,6 +28,8 @@ public class ProcessorThread implements Runnable, IProcessor, ApplicationEventPu
 	private String employeeTypes;
 	private String employeeStatus;
 	private String departments;
+	
+	private String benefits;
 
 	private List<?> employeeList;
 	private List<?> benefitList;
@@ -51,6 +53,8 @@ public class ProcessorThread implements Runnable, IProcessor, ApplicationEventPu
 		employeeTypes = applicationSettings.getEmployeeTypes();
 		employeeStatus = applicationSettings.getEmployeeStatus();
 		departments = applicationSettings.getDepartments();
+		
+		benefits = applicationSettings.getBenefits();
 
 		// Determine payroll system and file type
 		// InCode Logic
@@ -64,8 +68,10 @@ public class ProcessorThread implements Runnable, IProcessor, ApplicationEventPu
 					this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, employeeList));
 
 				} else if (fileType.equals("Benefit")) {
+					System.out.println(applicationSettings.getBenefits());
 					inCodeProcessor.processBenefit(filePath);
 					benefitList = inCodeProcessor.getBenefitList();
+					validator.validateBenefit(benefitList, benefits);
 					this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, benefitList));
 				}
 			} catch (IOException e) {

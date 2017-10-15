@@ -17,7 +17,7 @@ import com.shaffer.integrationhelper.service.impl.ProcessorThread;
 public class DIConfiguration {
 	@Bean
 	public MainController mainController() {
-		return new MainController(null, null);
+		return new MainController(null, null, null);
 	}
 
 	@Bean

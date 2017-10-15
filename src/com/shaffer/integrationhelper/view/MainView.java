@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import com.shaffer.integrationhelper.events.ErrorEvent;
 import com.shaffer.integrationhelper.events.ParsedLineEvent;
 
+
 import net.miginfocom.swing.MigLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -55,6 +56,8 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 	// ??
 	@Autowired
 	private EmployeeOptionsView employeeOptionsView;
+	@Autowired
+	private BenefitOptionsView benefitOptionsView;
 	// Tables
 	private JTable table;
 	// Check Boxes
