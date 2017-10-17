@@ -7,14 +7,43 @@ import java.sql.SQLException;
 
 import javax.swing.JTable;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.shaffer.integrationhelper.model.ApplicationSettings;
+
 public class QueryExecuter {
-
+	
+	@Autowired
+	private ApplicationSettings applicationSettings;
 	private PreparedStatement updateMapping = null;
-	private String updateString = "UPDATE employee_build_mapping " + " SET host_attribute_name = ?"
+	
+	//Update employee build mapping
+	private String updateString = "UPDATE employee_build_mapping " + " SET host_attribute_name = ? ,"
+			+ " update_flag = ? ,"
+			+"  rehire_update_flag = ? ,"
+			+ " host_attribute_type = ? "
 			+ " WHERE employee_build_mapping_id = ?";
-	private String createInCodeEmployeeJob = "INSERT INTO scheduled_job (class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
-			+ " VALUES('test', 600, 'test desciprtion', current_timestamp, 'test job', '24:00', '22:00')";
-
+	
+	//Create InCode jobs
+	private String createInCodeEmployeeJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
+			+ " VALUES(0,'net.executime.dataimport.EmployeeIntegrator', 600, 'Imports employee information from payroll', current_timestamp, 'Employee Integration', '24:00', '22:00')";
+	
+	
+	
+	//Configure default admin properties
+	private String passSalariedEntries = "update property set value = 'true' where property_id = 150";
+	private String exportOnlyTimeEntryDetails = "update property set value = 'true' where property_id = 240";
+	private String enableMTPDownload = "update property set value = 'true' where property_id = 334";
+	private String enableTimeKeeping = "update property set value = 'true' where property_id = 461";
+	private String enablePreview = "update property set value = 'true' where property_id = 624";
+	
+	//Configure default locations
+	private String updateLocation ="update location set name = '0001', description = '' where location_id = 1";
+	private String deleteOutpost = "delete from location where location_id = 2";
+	
+	//Configure default departments
+	
+	
 	private String payrollSystem;
 	private Connection conn;
 	private JTable tbl;
@@ -33,8 +62,16 @@ public class QueryExecuter {
 			updateMapping = conn.prepareStatement(updateString);
 
 			for (int row = 0; row < tbl.getRowCount(); row++) {
+				//Set host Attribute name
 				updateMapping.setString(1, tbl.getValueAt(row, 6).toString());
-				updateMapping.setInt(2, (int) tbl.getValueAt(row, 0));
+				//Set update flag
+				updateMapping.setString(2, tbl.getValueAt(row, 4).toString());
+				//Set rehire_update
+				updateMapping.setString(3, tbl.getValueAt(row, 5).toString());
+				//Set attribute type
+				updateMapping.setString(4, tbl.getValueAt(row, 7).toString());
+				//Build Mapping ID
+				updateMapping.setInt(5, (int) tbl.getValueAt(row, 0));
 				updateMapping.executeUpdate();
 				conn.commit();
 			}
