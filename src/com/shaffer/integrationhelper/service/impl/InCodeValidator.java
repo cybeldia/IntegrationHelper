@@ -54,6 +54,10 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 		if (enteredPayPeriods != null) {
 			payPeriods = new ArrayList<String>(Arrays.asList(enteredPayPeriods.split("\\s*,\\s*")));
 		}
+		
+		if(enteredDepartments.trim().isEmpty() && enteredEmployeeTypes.trim().isEmpty() && enteredEmployeeStatus.trim().isEmpty() && enteredPayPeriods.trim().isEmpty() ) {
+			errorsList.add("No validation parameters supplied");
+		}
 
 		if (employees != null) {
 			for (Object employeeObject : employees) {

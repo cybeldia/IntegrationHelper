@@ -87,7 +87,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		WebLookAndFeel.install();
 
 		frmIntegrationAssistant = new JFrame();
-		frmIntegrationAssistant.setIconImage(Toolkit.getDefaultToolkit().getImage(MainView.class.getResource("/com/shaffer/integrationhelper/view/favicon.png")));
+		frmIntegrationAssistant.setIconImage(Toolkit.getDefaultToolkit().getImage(MainView.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
 		frmIntegrationAssistant.setTitle("Integration Assistant");
 		frmIntegrationAssistant.setBounds(100, 100, 800, 600);
 		frmIntegrationAssistant.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -114,84 +114,89 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		panel.add(separator_5);
 
 		JLabel lblGeneral = new JLabel("General:");
-		lblGeneral.setBounds(12, 12, 57, 17);
+		lblGeneral.setBounds(7, 98, 57, 17);
 		lblGeneral.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel.add(lblGeneral);
 
 		JLabel lblPayrollSystem = new JLabel("Payroll System:");
-		lblPayrollSystem.setBounds(12, 35, 95, 17);
+		lblPayrollSystem.setBounds(7, 126, 95, 17);
 		lblPayrollSystem.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblPayrollSystem);
 
 		payrollComboBox = new JComboBox<String>();
-		payrollComboBox.setBounds(203, 33, 83, 20);
+		payrollComboBox.setBounds(203, 126, 83, 20);
 		payrollComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "InCode", "Generic" }));
 		panel.add(payrollComboBox);
 
 		JLabel lblFileType = new JLabel("File Type:");
-		lblFileType.setBounds(12, 57, 58, 17);
+		lblFileType.setBounds(7, 154, 58, 17);
 		lblFileType.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblFileType);
 
 		fileTypeComboBox = new JComboBox<String>();
-		fileTypeComboBox.setBounds(203, 57, 83, 20);
+		fileTypeComboBox.setBounds(203, 157, 83, 20);
 		fileTypeComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Employee", "Benefit", "Accounts" }));
 		panel.add(fileTypeComboBox);
 
 		JLabel lblExecutimeVersion = new JLabel("ExecuTime Version:");
-		lblExecutimeVersion.setBounds(12, 81, 120, 17);
+		lblExecutimeVersion.setBounds(7, 182, 120, 17);
 		lblExecutimeVersion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblExecutimeVersion);
 
 		versionComboBox = new JComboBox<String>();
-		versionComboBox.setBounds(203, 81, 83, 20);
+		versionComboBox.setBounds(203, 188, 83, 20);
 		versionComboBox.setModel(new DefaultComboBoxModel(new String[] { "4.x", "5.x" }));
 		panel.add(versionComboBox);
 
 		JLabel lblDatabaseConfigSettings = new JLabel("Database Config Settings:");
-		lblDatabaseConfigSettings.setBounds(12, 105, 179, 17);
+		lblDatabaseConfigSettings.setBounds(7, 216, 179, 17);
 		lblDatabaseConfigSettings.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel.add(lblDatabaseConfigSettings);
 
 		JLabel lblCreateScheduledJobs = new JLabel("Create scheduled jobs");
-		lblCreateScheduledJobs.setBounds(12, 128, 135, 17);
+		lblCreateScheduledJobs.setBounds(7, 244, 135, 17);
 		lblCreateScheduledJobs.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblCreateScheduledJobs);
 
 		scheduledJobsCheckBox = new JCheckBox("");
-		scheduledJobsCheckBox.setBounds(203, 126, 83, 21);
+		scheduledJobsCheckBox.setBounds(203, 244, 83, 21);
 		panel.add(scheduledJobsCheckBox);
 
 		JLabel lblSetupDefaultDepartments = new JLabel("Setup default departments");
-		lblSetupDefaultDepartments.setBounds(12, 153, 163, 17);
+		lblSetupDefaultDepartments.setBounds(7, 272, 163, 17);
 		lblSetupDefaultDepartments.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblSetupDefaultDepartments);
 
 		departmentsCheckBox = new JCheckBox("");
-		departmentsCheckBox.setBounds(203, 151, 83, 21);
+		departmentsCheckBox.setBounds(203, 268, 83, 21);
 		panel.add(departmentsCheckBox);
 
 		JLabel lblSetupDefaultLocations = new JLabel("Setup default Locations");
-		lblSetupDefaultLocations.setBounds(12, 178, 143, 17);
+		lblSetupDefaultLocations.setBounds(7, 300, 143, 17);
 		lblSetupDefaultLocations.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblSetupDefaultLocations);
 
 		locationCheckBox = new JCheckBox("");
-		locationCheckBox.setBounds(203, 176, 83, 21);
+		locationCheckBox.setBounds(203, 296, 83, 21);
 		panel.add(locationCheckBox);
 
 		JLabel lblSetupDefaultAdmin = new JLabel("Setup default admin properties");
-		lblSetupDefaultAdmin.setBounds(12, 203, 187, 17);
+		lblSetupDefaultAdmin.setBounds(7, 328, 187, 17);
 		lblSetupDefaultAdmin.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblSetupDefaultAdmin);
 
 		adminPropertiesCheckBox = new JCheckBox("");
-		adminPropertiesCheckBox.setBounds(203, 201, 83, 21);
+		adminPropertiesCheckBox.setBounds(203, 328, 83, 21);
 		panel.add(adminPropertiesCheckBox);
 
 		JLabel lblVersion = new JLabel("Alpha Version: 0.01");
-		lblVersion.setBounds(7, 467, 279, 14);
+		lblVersion.setBounds(7, 487, 279, 14);
 		panel.add(lblVersion);
+		
+		JLabel logo = new JLabel("New label");
+		logo.setIcon(new ImageIcon(MainView.class.getResource("/com/shaffer/integrationhelper/view/IntegrationAssistantLogo.png")));
+		logo.setBounds(240, 7, 293, 69);
+		panel.add(logo);
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Flat File Helper", null, panel_1, null);
@@ -275,6 +280,12 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		fileText = new JTextField();
 		panel_1.add(fileText, "cell 0 0");
 		fileText.setColumns(25);
+		
+		JPanel panel_3 = new JPanel();
+		tabbedPane.addTab("Payroll XML Builder", null, panel_3, null);
+		
+		JLabel lblComingSoon = new JLabel("Coming soon");
+		panel_3.add(lblComingSoon);
 
 	}
 

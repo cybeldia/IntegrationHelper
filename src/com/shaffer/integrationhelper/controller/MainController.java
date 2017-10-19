@@ -166,6 +166,9 @@ public class MainController {
 					{
 						queryExecuter.ExecuteAdminProperties();
 					}
+					if(mainView.getLocationCheckBox().isSelected()) {
+						queryExecuter.CleanUpLocations();
+					}
 					JOptionPane.showMessageDialog(null, "Execution Successful");
 				} catch (Exception ex) {
 					ex.printStackTrace();

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 import javax.swing.JTable;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +48,9 @@ public class QueryExecuter {
 	}
 
 	public void ExecuteMappingQuery(JTable tbl) throws Exception {
-
+		XMLToDBConnection connection = new XMLToDBConnection();
+		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
-			XMLToDBConnection connection = new XMLToDBConnection();
-			Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 
 			conn.setAutoCommit(false);
 			updateMapping = conn.prepareStatement(updateString);
@@ -71,36 +72,50 @@ public class QueryExecuter {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			conn.close();
 		}
+
 	}
 
 	public void CreateScheduledJobs() throws Exception {
+		XMLToDBConnection connection = new XMLToDBConnection();
+		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
-			XMLToDBConnection connection = new XMLToDBConnection();
-			Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 			conn.setAutoCommit(false);
 			if (applicationSettings.getPayrollSystem().equals("InCode")) {
 				conn.prepareStatement(createInCodeEmployeeJob).execute();
 				conn.commit();
+				conn.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			conn.close();
 		}
 	}
 
-	public ResultSet GetCurrentMapping() throws Exception {
+	public CachedRowSet GetCurrentMapping() throws Exception {
 
 		XMLToDBConnection connection = new XMLToDBConnection();
 		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
-		PreparedStatement st = conn.prepareStatement("SELECT * FROM employee_build_mapping");
-		ResultSet rs = st.executeQuery();
-		return rs;
-	}
-	
-	public void ExecuteAdminProperties() throws Exception {
+		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
-			XMLToDBConnection connection = new XMLToDBConnection();
-			Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+			PreparedStatement st = conn.prepareStatement("SELECT * FROM employee_build_mapping");
+			ResultSet rs = st.executeQuery();
+			crs.populate(rs);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			conn.close();
+		}
+		return crs;
+	}
+
+	public void ExecuteAdminProperties() throws Exception {
+		XMLToDBConnection connection = new XMLToDBConnection();
+		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		try {
 			conn.setAutoCommit(false);
 			if (applicationSettings.getPayrollSystem().equals("InCode")) {
 				conn.prepareStatement(passSalariedEntries).execute();
@@ -112,6 +127,25 @@ public class QueryExecuter {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			conn.close();
+		}
+	}
+
+	public void CleanUpLocations() throws Exception {
+		XMLToDBConnection connection = new XMLToDBConnection();
+		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		try {
+			conn.setAutoCommit(false);
+			if (applicationSettings.getPayrollSystem().equals("InCode")) {
+				conn.prepareStatement(updateLocation).execute();
+				conn.prepareStatement(deleteOutpost).execute();
+				conn.commit();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			conn.close();
 		}
 	}
 
