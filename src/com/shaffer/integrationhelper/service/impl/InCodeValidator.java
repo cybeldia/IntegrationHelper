@@ -39,7 +39,7 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 		List<String> errorsList = new ArrayList<String>();
 
 		// Handle Departments
-		if (enteredDepartments != null && !enteredDepartments.isEmpty()) {
+		if (enteredDepartments != null) {
 			departments = new ArrayList<String>(Arrays.asList(enteredDepartments.split("\\s*,\\s*")));
 		}
 

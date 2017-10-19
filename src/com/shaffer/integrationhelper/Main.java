@@ -30,6 +30,8 @@ public class Main {
 					mainController.setEmployeeOptionsView(employeeOptionsView);
 					mainController.setBenefitOptionsView(benefitOptionsView);
 					mainController.initialize();
+					
+					
 
 				} catch (Exception e) {
 					e.printStackTrace();

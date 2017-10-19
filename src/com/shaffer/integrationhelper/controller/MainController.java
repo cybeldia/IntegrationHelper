@@ -35,6 +35,8 @@ public class MainController {
 	private IValidator validator;
 	@Autowired
 	private ApplicationSettings applicationSettings;
+	@Autowired
+	private QueryExecuter queryExecuter;
 
 	public MainController(MainView mainView, EmployeeOptionsView employeeOptionsView, BenefitOptionsView benefitOptionsView) {
 		this.mainView = mainView;
@@ -98,7 +100,6 @@ public class MainController {
 				mainView.getErrorsTextArea().setText("");
 				mainView.getParsedLinesTextArea().setText("");
 				try {
-					System.out.println(applicationSettings.getBenefits());
 					applicationSettings.setFlatFileTextField(mainView.getFileText().getText());
 					processor.run();
 
@@ -136,12 +137,10 @@ public class MainController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					XMLToDBConnection connection = new XMLToDBConnection();
-					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().getText());
-					QueryExecuter executer = new QueryExecuter(
-							mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
-					mainView.getTable().setModel(DbUtils.resultSetToTableModel(executer.GetCurrentMapping()));
-					conn.close();
+					
+					applicationSettings.setDatabaseTextField(mainView.getServerXmlTextField().getText());
+					mainView.getTable().setModel(DbUtils.resultSetToTableModel(queryExecuter.GetCurrentMapping()));
+					
 					JOptionPane.showMessageDialog(null, "Connection successful");
 				} catch (Exception ex) {
 					// TODO Auto-generated catch block
@@ -159,15 +158,14 @@ public class MainController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					XMLToDBConnection connection = new XMLToDBConnection();
-					Connection conn = connection.DBConnection(mainView.getServerXmlTextField().getText());
-					QueryExecuter executer = new QueryExecuter(
-							mainView.getPayrollComboBox().getSelectedItem().toString(), conn, mainView.getTable());
-					executer.ExecuteMappingQuery();
+					queryExecuter.ExecuteMappingQuery(mainView.getTable());
 					if (mainView.getScheduledJobsCheckBox().isSelected()) {
-						executer.CreateScheduledJobs();
+						queryExecuter.CreateScheduledJobs();
 					}
-					conn.close();
+					if(mainView.getAdminPropertiesCheckBox().isSelected())
+					{
+						queryExecuter.ExecuteAdminProperties();
+					}
 					JOptionPane.showMessageDialog(null, "Execution Successful");
 				} catch (Exception ex) {
 					ex.printStackTrace();
