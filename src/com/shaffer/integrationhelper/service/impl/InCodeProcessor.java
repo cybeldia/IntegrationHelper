@@ -30,7 +30,6 @@ public class InCodeProcessor implements ApplicationEventPublisherAware {
 		// Validator handles the actual parsing of the InCode file.
 		int expectedColumnCount = 85;
 		String csvFileName = filePath;
-
 		if (expectedColumnCount == headerCount(csvFileName)) {
 			// Parse Csv into list of employees, later a new class will need to made that
 			// inherits from employee called InCode employee
@@ -38,24 +37,28 @@ public class InCodeProcessor implements ApplicationEventPublisherAware {
 					.withType(InCodeEmployee.class).withThrowExceptions(true).withIgnoreLeadingWhiteSpace(true)
 					.withVerifyReader(true).build().parse();
 			this.employeeList = list;
-
 		}
+		else {
+			JOptionPane.showMessageDialog(null, "Error: File does not match InCode employee format");
+		}
+
 	}
 
 	public void processBenefit(String filePath) throws IllegalStateException, FileNotFoundException, IOException {
 		// Validator handles the actual parsing of the InCode file.
 		int expectedColumnCount = 3;
 		String csvFileName = filePath;
-
-		if (expectedColumnCount == headerCount(csvFileName)) {
-			// Parse Csv into list of employees, later a new class will need to made that
-			// inherits from employee called InCode employee
-			List<InCodeBenefit> list = new CsvToBeanBuilder<InCodeBenefit>(new FileReader(csvFileName))
-					.withType(InCodeBenefit.class).withThrowExceptions(true).withIgnoreLeadingWhiteSpace(true)
-					.withVerifyReader(true).build().parse();
-			this.benefitList = list;
-
-		}
+			if (expectedColumnCount == headerCount(csvFileName)) {
+				// Parse Csv into list of employees, later a new class will need to made that
+				// inherits from employee called InCode employee
+				List<InCodeBenefit> list = new CsvToBeanBuilder<InCodeBenefit>(new FileReader(csvFileName))
+						.withType(InCodeBenefit.class).withThrowExceptions(true).withIgnoreLeadingWhiteSpace(true)
+						.withVerifyReader(true).build().parse();
+				this.benefitList = list;
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Error: File does not match InCode benefit format");
+			}
 	}
 
 	// Maybe seperate this out into another class later once the app handles more

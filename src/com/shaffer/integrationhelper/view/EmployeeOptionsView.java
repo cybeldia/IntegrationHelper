@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 import org.springframework.stereotype.Component;
 
 import net.miginfocom.swing.MigLayout;
+import java.awt.Toolkit;
 
 @Component
 public class EmployeeOptionsView extends JDialog {
@@ -26,6 +27,7 @@ public class EmployeeOptionsView extends JDialog {
 	private JButton cancelButton;
 
 	public EmployeeOptionsView() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(EmployeeOptionsView.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -65,17 +65,21 @@ public class ProcessorThread implements Runnable, IProcessor, ApplicationEventPu
 					inCodeProcessor.processEmployee(filePath);
 					employeeList = inCodeProcessor.getEmployeeList();
 					validator.validateEmployee(employeeList, departments, employeeTypes, employeeStatus, payPeriods);
+					if(employeeList != null) {
 					this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, employeeList));
+					}
 
 				} else if (fileType.equals("Benefit")) {
 					System.out.println(applicationSettings.getBenefits());
 					inCodeProcessor.processBenefit(filePath);
 					benefitList = inCodeProcessor.getBenefitList();
 					validator.validateBenefit(benefitList, benefits);
+					if(benefitList != null) {
 					this.applicationEventPublisher.publishEvent(new ParsedLineEvent(this, benefitList));
+					}
 				}
 			} catch (IOException e) {
-
+				
 			}
 		}
 	}
