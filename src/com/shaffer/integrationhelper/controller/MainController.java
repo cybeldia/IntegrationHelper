@@ -57,6 +57,8 @@ public class MainController {
 		executeQuery();
 		setPayrollSystem();
 		setFileType();
+		benefitCancel();
+		employeeCancel();
 	}
 
 	// Flat file validation Settings button
@@ -139,7 +141,7 @@ public class MainController {
 				try {
 					
 					applicationSettings.setDatabaseTextField(mainView.getServerXmlTextField().getText());
-					mainView.getTable().setModel(DbUtils.resultSetToTableModel(queryExecuter.GetCurrentMapping()));
+					mainView.getTable().setModel(DbUtils.resultSetToTableModel(queryExecuter.getCurrentMapping()));
 					
 					JOptionPane.showMessageDialog(null, "Connection successful");
 				} catch (Exception ex) {
@@ -158,16 +160,19 @@ public class MainController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					queryExecuter.ExecuteMappingQuery(mainView.getTable());
+					queryExecuter.executeMappingQuery(mainView.getTable());
 					if (mainView.getScheduledJobsCheckBox().isSelected()) {
-						queryExecuter.CreateScheduledJobs();
+						queryExecuter.createScheduledJobs();
 					}
 					if(mainView.getAdminPropertiesCheckBox().isSelected())
 					{
-						queryExecuter.ExecuteAdminProperties();
+						queryExecuter.executeAdminProperties();
 					}
 					if(mainView.getLocationCheckBox().isSelected()) {
-						queryExecuter.CleanUpLocations();
+						queryExecuter.cleanUpLocations();
+					}
+					if(mainView.getDepartmentsCheckBox().isSelected()) {
+						queryExecuter.setupOrgUnits();
 					}
 					JOptionPane.showMessageDialog(null, "Execution Successful");
 				} catch (Exception ex) {
@@ -183,10 +188,13 @@ public class MainController {
 		actionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (mainView.getPayrollComboBox().getSelectedItem().toString().equals("InCode")) {
-					PayrollDefaults pd = new PayrollDefaults();
+				PayrollDefaults pd = new PayrollDefaults();
+				if (applicationSettings.getPayrollSystem().equals("InCode")) {
 					pd.setInCodeDefaults(mainView.getTable());
 					mainView.getTable().repaint();
+				}
+				else if(applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
+					pd.setHTEDefaults(mainView.getTable());
 				}
 			}
 		};
@@ -209,6 +217,21 @@ public class MainController {
 
 	}
 	
+	public void employeeCancel() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				applicationSettings.setDepartments(employeeOptionsView.getDepartmentsTextField().getText());
+				applicationSettings.setPayPeriods(employeeOptionsView.getPayPeriodTextField().getText());
+				applicationSettings.setEmployeeStatus(employeeOptionsView.getEmployeeStatusTextField().getText());
+				applicationSettings.setEmployeeTypes(employeeOptionsView.getEmployeeTypesTextField().getText());
+				employeeOptionsView.setVisible(false);
+			}
+		};
+		employeeOptionsView.getCancelButton().addActionListener(actionListener);
+
+	}
+	
 	public void setBenefitValidationFields() {
 		actionListener = new ActionListener() {
 			@Override
@@ -218,6 +241,21 @@ public class MainController {
 			}
 		};
 		benefitOptionsView.getOkButton().addActionListener(actionListener);
+
+	}
+	
+	public void benefitCancel() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				applicationSettings.setDepartments(employeeOptionsView.getDepartmentsTextField().getText());
+				applicationSettings.setPayPeriods(employeeOptionsView.getPayPeriodTextField().getText());
+				applicationSettings.setEmployeeStatus(employeeOptionsView.getEmployeeStatusTextField().getText());
+				applicationSettings.setEmployeeTypes(employeeOptionsView.getEmployeeTypesTextField().getText());
+				employeeOptionsView.setVisible(false);
+			}
+		};
+		employeeOptionsView.getCancelButton().addActionListener(actionListener);
 
 	}
 

@@ -26,10 +26,24 @@ public class QueryExecuter {
 			+ " update_flag = ? ," + "  rehire_update_flag = ? ," + " host_attribute_type = ? "
 			+ " WHERE employee_build_mapping_id = ?";
 
+	// Create employee job
+	private String createEmployeeJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
+			+ " VALUES(0,'net.executime.dataimport.EmployeeIntegrator', 600, 'Imports employee information from payroll', current_timestamp, 'Employee Integration', '24:00', '21:00')";
 	// Create InCode jobs
-	private String createInCodeEmployeeJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
-			+ " VALUES(0,'net.executime.dataimport.EmployeeIntegrator', 600, 'Imports employee information from payroll', current_timestamp, 'Employee Integration', '24:00', '22:00')";
+	private String setInCodeEmployeeHost = "update property set value = 'net.executime.dataimport.TylerEmployeeBuildHostInterface' where property_id = 126";
 
+	private String createInCodeBenefitJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
+			+ " VALUES(0,'net.executime.dataimport.TylerBenefitBuild', 600, 'Imports benefit information from payroll', current_timestamp, 'Benefit Integration', '24:00', '23:00')";
+
+	// Create HTE jobs
+	private String setHTEEmployeeHost = "update property set value = ' net.executime.dataimport.HteEmployeeBuildHostInterface' where property_id = 126";
+	
+	private String createHTEDepartmentJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
+			+ " VALUES(0,'net.executime.dataimport.organizationunit.SungardHteDepartmentBuild', 600, 'Imports department information from payroll', current_timestamp, 'Department Integration', '24:00', '20:00')";
+	
+	private String createHTEBenefitJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
+			+ " VALUES(0,'net.executime.dataimport.HteDateBenefitBuild', 600, 'Imports benefit information from payroll', current_timestamp, 'Benefit Integration', '24:00', '22:00')";
+	
 	// Configure default admin properties
 	private String passSalariedEntries = "update property set value = 'true' where property_id = 150";
 	private String exportOnlyTimeEntryDetails = "update property set value = 'true' where property_id = 240";
@@ -41,13 +55,18 @@ public class QueryExecuter {
 	private String updateLocation = "update location set name = '0001', description = '' where location_id = 1";
 	private String deleteOutpost = "delete from location where location_id = 2";
 
-	// Configure default departments
+	// Configure Org units
+	private String deleteDepartments = "delete from department where department_id in (2, 3, 4)";
+	private String updateDepartment = "update department set name = 'Test Department', description = 'For Test and Admin Users' where department_id = 1 ";
+	private String deleteDivision = "delete from division where division_id = 2";
+	private String updateDivision = "update division set name = 'Test Division', description = 'For Test and Admin Users' where division_id = 1";
+	private String updateCompany = "update company set name = 'Test Company', description = 'For Test and Admin Users' where company_id = 1";
 
 	public QueryExecuter() {
 
 	}
 
-	public void ExecuteMappingQuery(JTable tbl) throws Exception {
+	public void executeMappingQuery(JTable tbl) throws Exception {
 		XMLToDBConnection connection = new XMLToDBConnection();
 		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
@@ -78,16 +97,22 @@ public class QueryExecuter {
 
 	}
 
-	public void CreateScheduledJobs() throws Exception {
+	public void createScheduledJobs() throws Exception {
 		XMLToDBConnection connection = new XMLToDBConnection();
 		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
+			conn.prepareStatement(createEmployeeJob).execute();
 			if (applicationSettings.getPayrollSystem().equals("InCode")) {
-				conn.prepareStatement(createInCodeEmployeeJob).execute();
-				conn.commit();
-				conn.close();
+				conn.prepareStatement(setInCodeEmployeeHost).execute();
+				conn.prepareStatement(createInCodeBenefitJob).execute();
 			}
+			else if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
+				conn.prepareStatement(setHTEEmployeeHost).execute();
+				conn.prepareStatement(createHTEBenefitJob).execute();
+				conn.prepareStatement(createHTEDepartmentJob).execute();
+			}
+			conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -95,7 +120,7 @@ public class QueryExecuter {
 		}
 	}
 
-	public CachedRowSet GetCurrentMapping() throws Exception {
+	public CachedRowSet getCurrentMapping() throws Exception {
 
 		XMLToDBConnection connection = new XMLToDBConnection();
 		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
@@ -112,19 +137,18 @@ public class QueryExecuter {
 		return crs;
 	}
 
-	public void ExecuteAdminProperties() throws Exception {
+	public void executeAdminProperties() throws Exception {
 		XMLToDBConnection connection = new XMLToDBConnection();
 		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
-			if (applicationSettings.getPayrollSystem().equals("InCode")) {
-				conn.prepareStatement(passSalariedEntries).execute();
-				conn.prepareStatement(exportOnlyTimeEntryDetails).execute();
-				conn.prepareStatement(enableMTPDownload).execute();
-				conn.prepareStatement(enableTimeKeeping).execute();
-				conn.prepareStatement(enablePreview).execute();
-				conn.commit();
-			}
+			conn.prepareStatement(passSalariedEntries).execute();
+			conn.prepareStatement(exportOnlyTimeEntryDetails).execute();
+			conn.prepareStatement(enableMTPDownload).execute();
+			conn.prepareStatement(enableTimeKeeping).execute();
+			conn.prepareStatement(enablePreview).execute();
+			conn.commit();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -132,16 +156,32 @@ public class QueryExecuter {
 		}
 	}
 
-	public void CleanUpLocations() throws Exception {
+	public void cleanUpLocations() throws Exception {
 		XMLToDBConnection connection = new XMLToDBConnection();
 		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
-			if (applicationSettings.getPayrollSystem().equals("InCode")) {
-				conn.prepareStatement(updateLocation).execute();
-				conn.prepareStatement(deleteOutpost).execute();
-				conn.commit();
-			}
+			conn.prepareStatement(updateLocation).execute();
+			conn.prepareStatement(deleteOutpost).execute();
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			conn.close();
+		}
+	}
+
+	public void setupOrgUnits() throws Exception {
+		XMLToDBConnection connection = new XMLToDBConnection();
+		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		try {
+			conn.setAutoCommit(false);
+			conn.prepareStatement(deleteDepartments).execute();
+			conn.prepareStatement(updateDepartment).execute();
+			conn.prepareStatement(deleteDivision).execute();
+			conn.prepareStatement(updateDivision).execute();
+			conn.prepareStatement(updateCompany).execute();
+			conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

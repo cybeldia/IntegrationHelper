@@ -42,6 +42,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.io.File;
+import javax.swing.JProgressBar;
 
 @Component
 public class MainView implements ApplicationListener<ErrorEvent> {
@@ -119,17 +120,17 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		panel.add(lblGeneral);
 
 		JLabel lblPayrollSystem = new JLabel("Payroll System:");
-		lblPayrollSystem.setBounds(7, 126, 95, 17);
+		lblPayrollSystem.setBounds(7, 129, 95, 17);
 		lblPayrollSystem.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblPayrollSystem);
 
 		payrollComboBox = new JComboBox<String>();
 		payrollComboBox.setBounds(203, 126, 83, 20);
-		payrollComboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "InCode", "Generic" }));
+		payrollComboBox.setModel(new DefaultComboBoxModel(new String[] {"InCode", "Sungard HTE", "Sungard IFAS"}));
 		panel.add(payrollComboBox);
 
 		JLabel lblFileType = new JLabel("File Type:");
-		lblFileType.setBounds(7, 154, 58, 17);
+		lblFileType.setBounds(6, 160, 58, 17);
 		lblFileType.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblFileType);
 
@@ -139,7 +140,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		panel.add(fileTypeComboBox);
 
 		JLabel lblExecutimeVersion = new JLabel("ExecuTime Version:");
-		lblExecutimeVersion.setBounds(7, 182, 120, 17);
+		lblExecutimeVersion.setBounds(7, 191, 120, 17);
 		lblExecutimeVersion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(lblExecutimeVersion);
 
@@ -159,7 +160,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		panel.add(lblCreateScheduledJobs);
 
 		scheduledJobsCheckBox = new JCheckBox("");
-		scheduledJobsCheckBox.setBounds(203, 244, 83, 21);
+		scheduledJobsCheckBox.setBounds(203, 244, 21, 21);
 		panel.add(scheduledJobsCheckBox);
 
 		JLabel lblSetupDefaultDepartments = new JLabel("Setup default departments");
@@ -168,7 +169,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		panel.add(lblSetupDefaultDepartments);
 
 		departmentsCheckBox = new JCheckBox("");
-		departmentsCheckBox.setBounds(203, 268, 83, 21);
+		departmentsCheckBox.setBounds(203, 268, 21, 21);
 		panel.add(departmentsCheckBox);
 
 		JLabel lblSetupDefaultLocations = new JLabel("Setup default Locations");
@@ -177,7 +178,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		panel.add(lblSetupDefaultLocations);
 
 		locationCheckBox = new JCheckBox("");
-		locationCheckBox.setBounds(203, 296, 83, 21);
+		locationCheckBox.setBounds(203, 296, 21, 21);
 		panel.add(locationCheckBox);
 
 		JLabel lblSetupDefaultAdmin = new JLabel("Setup default admin properties");
@@ -186,7 +187,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		panel.add(lblSetupDefaultAdmin);
 
 		adminPropertiesCheckBox = new JCheckBox("");
-		adminPropertiesCheckBox.setBounds(203, 328, 83, 21);
+		adminPropertiesCheckBox.setBounds(203, 328, 21, 21);
 		panel.add(adminPropertiesCheckBox);
 
 		JLabel lblVersion = new JLabel("Alpha Version: 0.01");
@@ -195,8 +196,12 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		
 		JLabel logo = new JLabel("New label");
 		logo.setIcon(new ImageIcon(MainView.class.getResource("/com/shaffer/integrationhelper/view/IntegrationAssistantLogo.png")));
-		logo.setBounds(240, 7, 293, 69);
+		logo.setBounds(223, 7, 293, 69);
 		panel.add(logo);
+		
+		JButton btnJobOptions = new JButton("Job Options");
+		btnJobOptions.setBounds(230, 243, 89, 23);
+		panel.add(btnJobOptions);
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Flat File Helper", null, panel_1, null);
