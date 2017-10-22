@@ -31,7 +31,7 @@ public class PayrollDefaults {
 			tbl.setValueAt("middleInitial", 25, 6);
 
 			// Set Update Flags and Host attribute type
-			
+
 			// Employee number
 			tbl.setValueAt("1", 1, 4);
 			tbl.setValueAt("1", 1, 5);
@@ -48,9 +48,9 @@ public class PayrollDefaults {
 			tbl.setValueAt("1", 4, 4);
 			tbl.setValueAt("1", 4, 5);
 			tbl.setValueAt("1", 4, 7);
-			//Password
+			// Password
 			tbl.setValueAt("1", 6, 7);
-			//Unique ID
+			// Unique ID
 			tbl.setValueAt("1", 7, 7);
 			// Pay Cycle
 			tbl.setValueAt("1", 8, 4);
@@ -77,7 +77,7 @@ public class PayrollDefaults {
 		}
 		return tbl;
 	}
-	
+
 	public JTable setHTEDefaults(JTable tbl) {
 
 		if ((tbl.getRowCount() > 0) && (tbl.getColumnCount() > 0)) {
@@ -107,7 +107,7 @@ public class PayrollDefaults {
 			tbl.setValueAt("Suffix", 26, 6);
 
 			// Set Update Flags and Host attribute type
-			
+
 			// Employee number
 			tbl.setValueAt("1", 1, 4);
 			tbl.setValueAt("1", 1, 5);
@@ -124,9 +124,9 @@ public class PayrollDefaults {
 			tbl.setValueAt("1", 4, 4);
 			tbl.setValueAt("1", 4, 5);
 			tbl.setValueAt("1", 4, 7);
-			//Password
+			// Password
 			tbl.setValueAt("1", 6, 7);
-			//Unique ID
+			// Unique ID
 			tbl.setValueAt("1", 7, 7);
 			// Pay Cycle
 			tbl.setValueAt("1", 8, 4);

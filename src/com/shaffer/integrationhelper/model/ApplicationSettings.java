@@ -1,5 +1,9 @@
 package com.shaffer.integrationhelper.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,8 +29,13 @@ public class ApplicationSettings {
 	private String employeeTypes = " ";
 	private String employeeStatus = " ";
 	private String departments = " ";
-	
+
 	private String benefits = " ";
+
+	private String benefitJob = " ";
+
+	// add all payroll systems that have job options here
+	private List<String> hasJobSettings = new ArrayList<>(Arrays.asList("Sungard HTE"));
 
 	public String getPayrollSystem() {
 		return payrollSystem;
@@ -139,6 +148,21 @@ public class ApplicationSettings {
 	public void setBenefits(String benefits) {
 		this.benefits = benefits;
 	}
-	
+
+	public String getBenefitJob() {
+		return benefitJob;
+	}
+
+	public void setBenefitJob(String benefitJob) {
+		this.benefitJob = benefitJob;
+	}
+
+	public List<String> getHasJobSettings() {
+		return hasJobSettings;
+	}
+
+	public void setHasJobSettings(List<String> hasJobSettings) {
+		this.hasJobSettings = hasJobSettings;
+	}
 
 }

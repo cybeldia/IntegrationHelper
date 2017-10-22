@@ -2,31 +2,34 @@ package com.shaffer.integrationhelper.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import org.springframework.stereotype.Component;
 
+import com.alee.laf.WebLookAndFeel;
+
 import net.miginfocom.swing.MigLayout;
-import java.awt.Toolkit;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 @Component
-public class SungardHTEOptions extends JDialog {
+public class SungardHTEOptionsView extends JDialog {
 
 	private JPanel contentPanel = new JPanel();
 	private JButton okButton;
 	private JButton cancelButton;
 	private JComboBox comboBox;
 
-	public SungardHTEOptions() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(SungardHTEOptions.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
+	public SungardHTEOptionsView() {
+		WebLookAndFeel.install();
+		setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(SungardHTEOptionsView.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -38,7 +41,12 @@ public class SungardHTEOptions extends JDialog {
 		}
 		{
 			comboBox = new JComboBox();
-			comboBox.setModel(new DefaultComboBoxModel(new String[] {"net.executime.dataimport.HteBenefitBuild", "net.executime.dataimport.HteDateBenefitBuild", "net.executime.dataimport.HteLastCheckBenefitBuild", "net.executime.dataimport.HtePreviousBalanceBenefifBuild", "net.executime.dataimport.HteDateActiveStatusBenefitBuild", "net.executime.dataimport.HteDateActiveStatusBenefitBuild", "net.executime.dataimport.HteBenefitBuildMultiLibrary"}));
+			comboBox.setModel(new DefaultComboBoxModel(new String[] { "net.executime.dataimport.HteBenefitBuild",
+					"net.executime.dataimport.HteDateBenefitBuild", "net.executime.dataimport.HteLastCheckBenefitBuild",
+					"net.executime.dataimport.HtePreviousBalanceBenefifBuild",
+					"net.executime.dataimport.HteDateActiveStatusBenefitBuild",
+					"net.executime.dataimport.HteDateActiveStatusBenefitBuild",
+					"net.executime.dataimport.HteBenefitBuildMultiLibrary" }));
 			contentPanel.add(comboBox, "cell 0 1,growx");
 		}
 		{
@@ -59,6 +67,30 @@ public class SungardHTEOptions extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+
+	public JButton getOkButton() {
+		return okButton;
+	}
+
+	public void setOkButton(JButton okButton) {
+		this.okButton = okButton;
+	}
+
+	public JButton getCancelButton() {
+		return cancelButton;
+	}
+
+	public void setCancelButton(JButton cancelButton) {
+		this.cancelButton = cancelButton;
+	}
+
+	public JComboBox getComboBox() {
+		return comboBox;
+	}
+
+	public void setComboBox(JComboBox comboBox) {
+		this.comboBox = comboBox;
 	}
 
 }

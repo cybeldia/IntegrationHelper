@@ -2,6 +2,7 @@ package com.shaffer.integrationhelper.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -12,8 +13,9 @@ import javax.swing.border.EmptyBorder;
 
 import org.springframework.stereotype.Component;
 
+import com.alee.laf.WebLookAndFeel;
+
 import net.miginfocom.swing.MigLayout;
-import java.awt.Toolkit;
 
 @Component
 public class BenefitOptionsView extends JDialog {
@@ -24,7 +26,9 @@ public class BenefitOptionsView extends JDialog {
 	private JButton cancelButton;
 
 	public BenefitOptionsView() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(BenefitOptionsView.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
+		WebLookAndFeel.install();
+		setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(BenefitOptionsView.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

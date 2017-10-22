@@ -2,8 +2,8 @@ package com.shaffer.integrationhelper.view;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
 
-import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,10 +22,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
@@ -36,13 +34,6 @@ import com.shaffer.integrationhelper.events.ErrorEvent;
 import com.shaffer.integrationhelper.events.ParsedLineEvent;
 
 import net.miginfocom.swing.MigLayout;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Toolkit;
-import java.io.File;
-import javax.swing.JProgressBar;
 
 @Component
 public class MainView implements ApplicationListener<ErrorEvent> {
@@ -79,16 +70,19 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 	private JButton btnPopulateTable;
 	private JButton btnExecute;
 	private JButton btnProcess;
+	private JButton btnJobOptions;
 
 	public MainView() throws Exception {
 
-		//BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
-		//UIManager.put("RootPane.setupButtonVisible", false);
-		//org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+		// BeautyEyeLNFHelper.frameBorderStyle =
+		// BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;
+		// UIManager.put("RootPane.setupButtonVisible", false);
+		// org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
 		WebLookAndFeel.install();
 
 		frmIntegrationAssistant = new JFrame();
-		frmIntegrationAssistant.setIconImage(Toolkit.getDefaultToolkit().getImage(MainView.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
+		frmIntegrationAssistant.setIconImage(Toolkit.getDefaultToolkit()
+				.getImage(MainView.class.getResource("/com/shaffer/integrationhelper/view/favicons.png")));
 		frmIntegrationAssistant.setTitle("Integration Assistant");
 		frmIntegrationAssistant.setBounds(100, 100, 800, 600);
 		frmIntegrationAssistant.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,7 +120,7 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 
 		payrollComboBox = new JComboBox<String>();
 		payrollComboBox.setBounds(203, 126, 83, 20);
-		payrollComboBox.setModel(new DefaultComboBoxModel(new String[] {"InCode", "Sungard HTE", "Sungard IFAS"}));
+		payrollComboBox.setModel(new DefaultComboBoxModel(new String[] { "InCode", "Sungard HTE", "Sungard IFAS" }));
 		panel.add(payrollComboBox);
 
 		JLabel lblFileType = new JLabel("File Type:");
@@ -193,15 +187,17 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		JLabel lblVersion = new JLabel("Alpha Version: 0.01");
 		lblVersion.setBounds(7, 487, 279, 14);
 		panel.add(lblVersion);
-		
+
 		JLabel logo = new JLabel("New label");
-		logo.setIcon(new ImageIcon(MainView.class.getResource("/com/shaffer/integrationhelper/view/IntegrationAssistantLogo.png")));
+		logo.setIcon(new ImageIcon(
+				MainView.class.getResource("/com/shaffer/integrationhelper/view/IntegrationAssistantLogo.png")));
 		logo.setBounds(223, 7, 293, 69);
 		panel.add(logo);
-		
-		JButton btnJobOptions = new JButton("Job Options");
+
+		btnJobOptions = new JButton("Job Options");
 		btnJobOptions.setBounds(230, 243, 89, 23);
 		panel.add(btnJobOptions);
+		btnJobOptions.setVisible(false);
 
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Flat File Helper", null, panel_1, null);
@@ -285,10 +281,10 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 		fileText = new JTextField();
 		panel_1.add(fileText, "cell 0 0");
 		fileText.setColumns(25);
-		
+
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("Payroll XML Builder", null, panel_3, null);
-		
+
 		JLabel lblComingSoon = new JLabel("Coming soon");
 		panel_3.add(lblComingSoon);
 
@@ -477,4 +473,13 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 	public void setBtnProcess(JButton btnProcess) {
 		this.btnProcess = btnProcess;
 	}
+
+	public JButton getBtnJobOptions() {
+		return btnJobOptions;
+	}
+
+	public void setBtnJobOptions(JButton btnJobOptions) {
+		this.btnJobOptions = btnJobOptions;
+	}
+
 }

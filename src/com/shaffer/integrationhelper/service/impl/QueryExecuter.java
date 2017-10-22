@@ -20,6 +20,7 @@ public class QueryExecuter {
 	@Autowired
 	private ApplicationSettings applicationSettings;
 	private PreparedStatement updateMapping = null;
+	private PreparedStatement benefitJobPS = null;
 
 	// Update employee build mapping
 	private String updateString = "UPDATE employee_build_mapping " + " SET host_attribute_name = ? ,"
@@ -37,13 +38,13 @@ public class QueryExecuter {
 
 	// Create HTE jobs
 	private String setHTEEmployeeHost = "update property set value = ' net.executime.dataimport.HteEmployeeBuildHostInterface' where property_id = 126";
-	
+
 	private String createHTEDepartmentJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
 			+ " VALUES(0,'net.executime.dataimport.organizationunit.SungardHteDepartmentBuild', 600, 'Imports department information from payroll', current_timestamp, 'Department Integration', '24:00', '20:00')";
-	
+
 	private String createHTEBenefitJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
-			+ " VALUES(0,'net.executime.dataimport.HteDateBenefitBuild', 600, 'Imports benefit information from payroll', current_timestamp, 'Benefit Integration', '24:00', '22:00')";
-	
+			+ " VALUES(0,?, 600, 'Imports benefit information from payroll', current_timestamp, 'Benefit Integration', '24:00', '22:00')";
+
 	// Configure default admin properties
 	private String passSalariedEntries = "update property set value = 'true' where property_id = 150";
 	private String exportOnlyTimeEntryDetails = "update property set value = 'true' where property_id = 240";
@@ -106,11 +107,13 @@ public class QueryExecuter {
 			if (applicationSettings.getPayrollSystem().equals("InCode")) {
 				conn.prepareStatement(setInCodeEmployeeHost).execute();
 				conn.prepareStatement(createInCodeBenefitJob).execute();
-			}
-			else if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
+			} else if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
+				benefitJobPS = conn.prepareStatement(createHTEBenefitJob);
+				benefitJobPS.setString(1, applicationSettings.getBenefitJob());
 				conn.prepareStatement(setHTEEmployeeHost).execute();
-				conn.prepareStatement(createHTEBenefitJob).execute();
 				conn.prepareStatement(createHTEDepartmentJob).execute();
+				benefitJobPS.executeUpdate();
+
 			}
 			conn.commit();
 		} catch (SQLException e) {

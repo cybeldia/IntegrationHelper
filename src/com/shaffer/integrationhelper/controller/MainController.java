@@ -2,7 +2,6 @@ package com.shaffer.integrationhelper.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -15,10 +14,10 @@ import com.shaffer.integrationhelper.model.PayrollDefaults;
 import com.shaffer.integrationhelper.service.IProcessor;
 import com.shaffer.integrationhelper.service.IValidator;
 import com.shaffer.integrationhelper.service.impl.QueryExecuter;
-import com.shaffer.integrationhelper.service.impl.XMLToDBConnection;
 import com.shaffer.integrationhelper.view.BenefitOptionsView;
 import com.shaffer.integrationhelper.view.EmployeeOptionsView;
 import com.shaffer.integrationhelper.view.MainView;
+import com.shaffer.integrationhelper.view.SungardHTEOptionsView;
 
 import net.proteanit.sql.DbUtils;
 
@@ -30,6 +29,8 @@ public class MainController {
 	private ActionListener actionListener;
 
 	@Autowired
+	private SungardHTEOptionsView sungardHTEOptionsView;
+	@Autowired
 	private IProcessor processor;
 	@Autowired
 	private IValidator validator;
@@ -38,7 +39,8 @@ public class MainController {
 	@Autowired
 	private QueryExecuter queryExecuter;
 
-	public MainController(MainView mainView, EmployeeOptionsView employeeOptionsView, BenefitOptionsView benefitOptionsView) {
+	public MainController(MainView mainView, EmployeeOptionsView employeeOptionsView,
+			BenefitOptionsView benefitOptionsView) {
 		this.mainView = mainView;
 		this.employeeOptionsView = employeeOptionsView;
 		this.benefitOptionsView = benefitOptionsView;
@@ -59,6 +61,9 @@ public class MainController {
 		setFileType();
 		benefitCancel();
 		employeeCancel();
+		setJobOptions();
+		scheduleJobCheckBoxListener();
+
 	}
 
 	// Flat file validation Settings button
@@ -66,9 +71,9 @@ public class MainController {
 		actionListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(applicationSettings.getFileType().equals("Employee")) {
-				employeeOptionsView.setVisible(true);
-				} else if(applicationSettings.getFileType().equals("Benefit")) {
+				if (applicationSettings.getFileType().equals("Employee")) {
+					employeeOptionsView.setVisible(true);
+				} else if (applicationSettings.getFileType().equals("Benefit")) {
 					benefitOptionsView.setVisible(true);
 				}
 			}
@@ -139,10 +144,10 @@ public class MainController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					
+
 					applicationSettings.setDatabaseTextField(mainView.getServerXmlTextField().getText());
 					mainView.getTable().setModel(DbUtils.resultSetToTableModel(queryExecuter.getCurrentMapping()));
-					
+
 					JOptionPane.showMessageDialog(null, "Connection successful");
 				} catch (Exception ex) {
 					// TODO Auto-generated catch block
@@ -164,14 +169,13 @@ public class MainController {
 					if (mainView.getScheduledJobsCheckBox().isSelected()) {
 						queryExecuter.createScheduledJobs();
 					}
-					if(mainView.getAdminPropertiesCheckBox().isSelected())
-					{
+					if (mainView.getAdminPropertiesCheckBox().isSelected()) {
 						queryExecuter.executeAdminProperties();
 					}
-					if(mainView.getLocationCheckBox().isSelected()) {
+					if (mainView.getLocationCheckBox().isSelected()) {
 						queryExecuter.cleanUpLocations();
 					}
-					if(mainView.getDepartmentsCheckBox().isSelected()) {
+					if (mainView.getDepartmentsCheckBox().isSelected()) {
 						queryExecuter.setupOrgUnits();
 					}
 					JOptionPane.showMessageDialog(null, "Execution Successful");
@@ -192,8 +196,7 @@ public class MainController {
 				if (applicationSettings.getPayrollSystem().equals("InCode")) {
 					pd.setInCodeDefaults(mainView.getTable());
 					mainView.getTable().repaint();
-				}
-				else if(applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
+				} else if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
 					pd.setHTEDefaults(mainView.getTable());
 				}
 			}
@@ -216,7 +219,7 @@ public class MainController {
 		employeeOptionsView.getOkButton().addActionListener(actionListener);
 
 	}
-	
+
 	public void employeeCancel() {
 		actionListener = new ActionListener() {
 			@Override
@@ -231,7 +234,7 @@ public class MainController {
 		employeeOptionsView.getCancelButton().addActionListener(actionListener);
 
 	}
-	
+
 	public void setBenefitValidationFields() {
 		actionListener = new ActionListener() {
 			@Override
@@ -243,7 +246,7 @@ public class MainController {
 		benefitOptionsView.getOkButton().addActionListener(actionListener);
 
 	}
-	
+
 	public void benefitCancel() {
 		actionListener = new ActionListener() {
 			@Override
@@ -266,7 +269,7 @@ public class MainController {
 			public void actionPerformed(ActionEvent e) {
 				applicationSettings.setPayrollSystem(mainView.getPayrollComboBox().getSelectedItem().toString());
 				System.out.println(applicationSettings.getPayrollSystem());
-
+				showJobOptionsButton();
 			}
 		};
 		mainView.getPayrollComboBox().addActionListener(actionListener);
@@ -282,6 +285,41 @@ public class MainController {
 		mainView.getFileTypeComboBox().addActionListener(actionListener);
 	}
 
+	// Shows the job options button - called in comboBox listener and scheduled jobs
+	// checkbox listener
+	// checkbox listener
+	public void showJobOptionsButton() {
+		if (mainView.getScheduledJobsCheckBox().isSelected()
+				&& applicationSettings.getHasJobSettings().contains(applicationSettings.getPayrollSystem())) {
+			mainView.getBtnJobOptions().setVisible(true);
+		} else {
+			mainView.getBtnJobOptions().setVisible(false);
+		}
+	}
+
+	public void scheduleJobCheckBoxListener() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showJobOptionsButton();
+			}
+		};
+		mainView.getScheduledJobsCheckBox().addActionListener(actionListener);
+	}
+
+	// Opens the correct job options view based on the payroll system
+	public void setJobOptions() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
+					sungardHTEOptionsView.setVisible(true);
+				}
+			}
+		};
+		mainView.getBtnJobOptions().addActionListener(actionListener);
+	}
+
 	public void setMainView(MainView mainView) {
 		this.mainView = mainView;
 	}
@@ -289,6 +327,7 @@ public class MainController {
 	public void setEmployeeOptionsView(EmployeeOptionsView employeeOptionsView) {
 		this.employeeOptionsView = employeeOptionsView;
 	}
+
 	public void setBenefitOptionsView(BenefitOptionsView benefitOptionsView) {
 		this.benefitOptionsView = benefitOptionsView;
 	}

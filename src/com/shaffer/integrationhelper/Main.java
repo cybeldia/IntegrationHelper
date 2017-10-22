@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.shaffer.integrationhelper.controller.JobOptionsController;
 import com.shaffer.integrationhelper.controller.MainController;
 import com.shaffer.integrationhelper.view.BenefitOptionsView;
 import com.shaffer.integrationhelper.view.EmployeeOptionsView;
@@ -30,8 +31,9 @@ public class Main {
 					mainController.setEmployeeOptionsView(employeeOptionsView);
 					mainController.setBenefitOptionsView(benefitOptionsView);
 					mainController.initialize();
-					
-					
+
+					JobOptionsController jobOptionsController = context.getBean(JobOptionsController.class);
+					jobOptionsController.initialize();
 
 				} catch (Exception e) {
 					e.printStackTrace();

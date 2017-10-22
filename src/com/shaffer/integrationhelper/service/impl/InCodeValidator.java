@@ -20,7 +20,7 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 	private List<String> employeeTypes;
 	private List<String> employeeStatus;
 	private List<String> departments;
-	
+
 	private List<String> benefits;
 
 	private ApplicationEventPublisher applicationEventPublisher = null;
@@ -54,8 +54,9 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 		if (enteredPayPeriods != null) {
 			payPeriods = new ArrayList<String>(Arrays.asList(enteredPayPeriods.split("\\s*,\\s*")));
 		}
-		
-		if(enteredDepartments.trim().isEmpty() && enteredEmployeeTypes.trim().isEmpty() && enteredEmployeeStatus.trim().isEmpty() && enteredPayPeriods.trim().isEmpty() ) {
+
+		if (enteredDepartments.trim().isEmpty() && enteredEmployeeTypes.trim().isEmpty()
+				&& enteredEmployeeStatus.trim().isEmpty() && enteredPayPeriods.trim().isEmpty()) {
 			errorsList.add("No validation parameters supplied");
 		}
 
@@ -94,7 +95,8 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 
 		this.applicationEventPublisher.publishEvent(new ErrorEvent(this, errorsList));
 	}
-	
+
+	@Override
 	public void validateBenefit(List<?> benefitList, String enteredBenefits) {
 
 		// Save overall Errors
@@ -107,9 +109,8 @@ public class InCodeValidator implements IValidator, ApplicationEventPublisherAwa
 
 		if (benefits != null) {
 			for (Object benefitObject : benefitList) {
-				InCodeBenefit benefit = (InCodeBenefit)benefitObject;
-				if (!benefits.contains(benefit.getHoursCode().toString().trim())
-						&& !enteredBenefits.trim().isEmpty()) {
+				InCodeBenefit benefit = (InCodeBenefit) benefitObject;
+				if (!benefits.contains(benefit.getHoursCode().toString().trim()) && !enteredBenefits.trim().isEmpty()) {
 					errorsList.add("The hours code " + benefit.getHoursCode().toString() + " is incorrect."
 							+ System.lineSeparator());
 				}
