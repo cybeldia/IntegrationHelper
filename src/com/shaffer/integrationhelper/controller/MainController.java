@@ -59,9 +59,8 @@ public class MainController {
 		executeQuery();
 		setPayrollSystem();
 		setFileType();
-		benefitCancel();
-		employeeCancel();
 		setJobOptions();
+		setVersion();
 		scheduleJobCheckBoxListener();
 
 	}
@@ -160,6 +159,7 @@ public class MainController {
 		mainView.getBtnTestDatabaseConnection().addActionListener(actionListener);
 	}
 
+	// Executes queries to setup a system
 	public void executeQuery() {
 		actionListener = new ActionListener() {
 			@Override
@@ -205,6 +205,7 @@ public class MainController {
 
 	}
 
+	// Sets fields to validate for an employee file in the application settings
 	public void setEmployeeValidationFields() {
 		actionListener = new ActionListener() {
 			@Override
@@ -217,24 +218,11 @@ public class MainController {
 			}
 		};
 		employeeOptionsView.getOkButton().addActionListener(actionListener);
-
-	}
-
-	public void employeeCancel() {
-		actionListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				applicationSettings.setDepartments(employeeOptionsView.getDepartmentsTextField().getText());
-				applicationSettings.setPayPeriods(employeeOptionsView.getPayPeriodTextField().getText());
-				applicationSettings.setEmployeeStatus(employeeOptionsView.getEmployeeStatusTextField().getText());
-				applicationSettings.setEmployeeTypes(employeeOptionsView.getEmployeeTypesTextField().getText());
-				employeeOptionsView.setVisible(false);
-			}
-		};
 		employeeOptionsView.getCancelButton().addActionListener(actionListener);
 
 	}
 
+	// Sets fields to validate for the benefit file in the application settings
 	public void setBenefitValidationFields() {
 		actionListener = new ActionListener() {
 			@Override
@@ -244,25 +232,12 @@ public class MainController {
 			}
 		};
 		benefitOptionsView.getOkButton().addActionListener(actionListener);
-
-	}
-
-	public void benefitCancel() {
-		actionListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				applicationSettings.setDepartments(employeeOptionsView.getDepartmentsTextField().getText());
-				applicationSettings.setPayPeriods(employeeOptionsView.getPayPeriodTextField().getText());
-				applicationSettings.setEmployeeStatus(employeeOptionsView.getEmployeeStatusTextField().getText());
-				applicationSettings.setEmployeeTypes(employeeOptionsView.getEmployeeTypesTextField().getText());
-				employeeOptionsView.setVisible(false);
-			}
-		};
 		employeeOptionsView.getCancelButton().addActionListener(actionListener);
 
 	}
 
-	// Handle changing app settings
+	// Handle changing payroll system in app settings also listens for when to show
+	// job options box in conjunction with the checkbox listener
 	public void setPayrollSystem() {
 		actionListener = new ActionListener() {
 			@Override
@@ -275,6 +250,7 @@ public class MainController {
 		mainView.getPayrollComboBox().addActionListener(actionListener);
 	}
 
+	// Changes file type in application settings
 	public void setFileType() {
 		actionListener = new ActionListener() {
 			@Override
@@ -285,9 +261,8 @@ public class MainController {
 		mainView.getFileTypeComboBox().addActionListener(actionListener);
 	}
 
-	// Shows the job options button - called in comboBox listener and scheduled jobs
-	// checkbox listener
-	// checkbox listener
+	// Logic to show whether or not the job option box should show. Based on payroll
+	// systems flagged with options
 	public void showJobOptionsButton() {
 		if (mainView.getScheduledJobsCheckBox().isSelected()
 				&& applicationSettings.getHasJobSettings().contains(applicationSettings.getPayrollSystem())) {
@@ -297,6 +272,7 @@ public class MainController {
 		}
 	}
 
+	// Checkbox listener for showing job options button
 	public void scheduleJobCheckBoxListener() {
 		actionListener = new ActionListener() {
 			@Override
@@ -320,6 +296,22 @@ public class MainController {
 		mainView.getBtnJobOptions().addActionListener(actionListener);
 	}
 
+	// Listens on version checkbox for changes and sets them in the
+	// applicationSettings
+	public void setVersion() {
+		actionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				applicationSettings.setVersion(mainView.getVersionComboBox().getSelectedItem().toString());
+				System.out.println(applicationSettings.getVersion());
+			}
+		};
+		mainView.getVersionComboBox().addActionListener(actionListener);
+
+	}
+
+	// Setters for managing views - needs to be replaced now that I'm using spring.
+	// I can autowire these singleton components
 	public void setMainView(MainView mainView) {
 		this.mainView = mainView;
 	}

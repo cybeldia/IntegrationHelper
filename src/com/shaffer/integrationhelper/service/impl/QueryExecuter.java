@@ -19,6 +19,8 @@ public class QueryExecuter {
 
 	@Autowired
 	private ApplicationSettings applicationSettings;
+	@Autowired
+	private XMLToDBConnection xmlToDBConnection;
 	private PreparedStatement updateMapping = null;
 	private PreparedStatement benefitJobPS = null;
 
@@ -68,8 +70,7 @@ public class QueryExecuter {
 	}
 
 	public void executeMappingQuery(JTable tbl) throws Exception {
-		XMLToDBConnection connection = new XMLToDBConnection();
-		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 
 			conn.setAutoCommit(false);
@@ -99,8 +100,8 @@ public class QueryExecuter {
 	}
 
 	public void createScheduledJobs() throws Exception {
-		XMLToDBConnection connection = new XMLToDBConnection();
-		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		
+		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
 			conn.prepareStatement(createEmployeeJob).execute();
@@ -125,8 +126,8 @@ public class QueryExecuter {
 
 	public CachedRowSet getCurrentMapping() throws Exception {
 
-		XMLToDBConnection connection = new XMLToDBConnection();
-		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		
+		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
 			PreparedStatement st = conn.prepareStatement("SELECT * FROM employee_build_mapping");
@@ -141,8 +142,8 @@ public class QueryExecuter {
 	}
 
 	public void executeAdminProperties() throws Exception {
-		XMLToDBConnection connection = new XMLToDBConnection();
-		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		
+		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
 			conn.prepareStatement(passSalariedEntries).execute();
@@ -160,8 +161,8 @@ public class QueryExecuter {
 	}
 
 	public void cleanUpLocations() throws Exception {
-		XMLToDBConnection connection = new XMLToDBConnection();
-		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+	
+		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
 			conn.prepareStatement(updateLocation).execute();
@@ -175,8 +176,8 @@ public class QueryExecuter {
 	}
 
 	public void setupOrgUnits() throws Exception {
-		XMLToDBConnection connection = new XMLToDBConnection();
-		Connection conn = connection.DBConnection(applicationSettings.getDatabaseTextField());
+		
+		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
 			conn.prepareStatement(deleteDepartments).execute();

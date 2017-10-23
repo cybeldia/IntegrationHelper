@@ -3,7 +3,7 @@ package com.shaffer.integrationhelper.model;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-@Root
+@Root(strict = false)
 public class v4DataSource {
 
 	@Element(name = "local-tx-datasource")

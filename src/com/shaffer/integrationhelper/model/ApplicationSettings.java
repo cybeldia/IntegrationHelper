@@ -12,7 +12,7 @@ public class ApplicationSettings {
 	// General settings
 	private String payrollSystem = "InCode";
 	private String fileType = "Employee";
-	private String version;
+	private String version = "4.x";
 
 	// File paths
 	private String flatFileTextField;
