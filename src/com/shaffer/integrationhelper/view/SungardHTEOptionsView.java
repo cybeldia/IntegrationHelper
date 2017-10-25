@@ -25,6 +25,8 @@ public class SungardHTEOptionsView extends JDialog {
 	private JButton okButton;
 	private JButton cancelButton;
 	private JComboBox comboBox;
+	private JLabel lblPleaseSelectA;
+	private JComboBox comboBox_1;
 
 	public SungardHTEOptionsView() {
 		WebLookAndFeel.install();
@@ -34,10 +36,19 @@ public class SungardHTEOptionsView extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[grow]", "[][][][][]"));
+		contentPanel.setLayout(new MigLayout("", "[grow]", "[][][][][][]"));
+		{
+			lblPleaseSelectA = new JLabel("Please select a class for the employee job:");
+			contentPanel.add(lblPleaseSelectA, "cell 0 0");
+		}
+		{
+			comboBox_1 = new JComboBox();
+			comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"net.executime.dataimport.HteEmployeeBuildHostInterface", "net.executime.dataimport.HteEmployeeBuildHostInterfacePlusHR", "net.executime.dataimport.HteEmployeeBuildHostInterfaceMultiLibrary"}));
+			contentPanel.add(comboBox_1, "cell 0 1,growx");
+		}
 		{
 			JLabel lblHTEBenefitTxt = new JLabel("Please select a class for the benefit job:");
-			contentPanel.add(lblHTEBenefitTxt, "cell 0 0");
+			contentPanel.add(lblHTEBenefitTxt, "cell 0 3");
 		}
 		{
 			comboBox = new JComboBox();
@@ -47,7 +58,7 @@ public class SungardHTEOptionsView extends JDialog {
 					"net.executime.dataimport.HteDateActiveStatusBenefitBuild",
 					"net.executime.dataimport.HteDateActiveStatusBenefitBuild",
 					"net.executime.dataimport.HteBenefitBuildMultiLibrary" }));
-			contentPanel.add(comboBox, "cell 0 1,growx");
+			contentPanel.add(comboBox, "cell 0 4,growx");
 		}
 		{
 			JPanel buttonPane = new JPanel();

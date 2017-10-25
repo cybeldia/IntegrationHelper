@@ -23,6 +23,7 @@ public class QueryExecuter {
 	private XMLToDBConnection xmlToDBConnection;
 	private PreparedStatement updateMapping = null;
 	private PreparedStatement benefitJobPS = null;
+	private PreparedStatement employeeJobPS = null;
 
 	// Update employee build mapping
 	private String updateString = "UPDATE employee_build_mapping " + " SET host_attribute_name = ? ,"
@@ -39,7 +40,7 @@ public class QueryExecuter {
 			+ " VALUES(0,'net.executime.dataimport.TylerBenefitBuild', 600, 'Imports benefit information from payroll', current_timestamp, 'Benefit Integration', '24:00', '23:00')";
 
 	// Create HTE jobs
-	private String setHTEEmployeeHost = "update property set value = ' net.executime.dataimport.HteEmployeeBuildHostInterface' where property_id = 126";
+	private String setHTEEmployeeHost = "update property set value = ? where property_id = 126";
 
 	private String createHTEDepartmentJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
 			+ " VALUES(0,'net.executime.dataimport.organizationunit.SungardHteDepartmentBuild', 600, 'Imports department information from payroll', current_timestamp, 'Department Integration', '24:00', '20:00')";
@@ -111,10 +112,11 @@ public class QueryExecuter {
 			} else if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
 				benefitJobPS = conn.prepareStatement(createHTEBenefitJob);
 				benefitJobPS.setString(1, applicationSettings.getBenefitJob());
-				conn.prepareStatement(setHTEEmployeeHost).execute();
+				employeeJobPS = conn.prepareStatement(setHTEEmployeeHost);
+				employeeJobPS.setString(1, applicationSettings.getEmployeeJob());
 				conn.prepareStatement(createHTEDepartmentJob).execute();
 				benefitJobPS.executeUpdate();
-
+				employeeJobPS.executeUpdate();
 			}
 			conn.commit();
 		} catch (SQLException e) {

@@ -28,6 +28,8 @@ public class JobOptionsController {
 			public void actionPerformed(ActionEvent e) {
 				applicationSettings
 						.setBenefitJob((sungardHTEOptionsView.getComboBox().getSelectedItem().toString().trim()));
+				applicationSettings
+				.setEmployeeJob(sungardHTEOptionsView.getComboBox().getSelectedItem().toString().trim());
 				sungardHTEOptionsView.setVisible(false);
 			}
 		};

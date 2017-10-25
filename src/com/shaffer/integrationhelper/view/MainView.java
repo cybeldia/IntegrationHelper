@@ -257,7 +257,8 @@ public class MainView implements ApplicationListener<ErrorEvent> {
 
 		JSeparator separator_1 = new JSeparator();
 		panel_2.add(separator_1, "cell 0 2 2 1,growx");
-
+		
+		//remove scrollPane to stop stack overflow on window builder - remember to add back later
 		JScrollPane scrollPane = new JScrollPane();
 		panel_2.add(scrollPane, "cell 0 3 2 1,grow");
 

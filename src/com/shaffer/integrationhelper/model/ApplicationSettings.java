@@ -33,6 +33,7 @@ public class ApplicationSettings {
 	private String benefits = " ";
 
 	private String benefitJob = " ";
+	private String employeeJob = " ";
 
 	// add all payroll systems that have job options here
 	private List<String> hasJobSettings = new ArrayList<>(Arrays.asList("Sungard HTE"));
@@ -164,5 +165,15 @@ public class ApplicationSettings {
 	public void setHasJobSettings(List<String> hasJobSettings) {
 		this.hasJobSettings = hasJobSettings;
 	}
+
+	public String getEmployeeJob() {
+		return employeeJob;
+	}
+
+	public void setEmployeeJob(String employeeJob) {
+		this.employeeJob = employeeJob;
+	}
+	
+	
 
 }

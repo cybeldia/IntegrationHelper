@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="Lib/beautyeye_lnf.jar"/>
 	<classpathentry kind="lib" path="Lib/rs2xml.jar"/>
 	<classpathentry kind="lib" path="Lib/weblaf-complete-1.29.jar"/>
+	<classpathentry kind="lib" path="Lib/dom4j-2.1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
