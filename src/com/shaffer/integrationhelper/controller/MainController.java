@@ -18,6 +18,7 @@ import com.shaffer.integrationhelper.view.BenefitOptionsView;
 import com.shaffer.integrationhelper.view.EmployeeOptionsView;
 import com.shaffer.integrationhelper.view.MainView;
 import com.shaffer.integrationhelper.view.SungardHTEOptionsView;
+import com.shaffer.integrationhelper.view.SungardIFASOptionsView;
 
 import net.proteanit.sql.DbUtils;
 
@@ -30,6 +31,8 @@ public class MainController {
 
 	@Autowired
 	private SungardHTEOptionsView sungardHTEOptionsView;
+	@Autowired
+	private SungardIFASOptionsView sungardIFASOptionsView;
 	@Autowired
 	private IProcessor processor;
 	@Autowired
@@ -199,6 +202,9 @@ public class MainController {
 				} else if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
 					pd.setHTEDefaults(mainView.getTable());
 				}
+				else if (applicationSettings.getPayrollSystem().equals("Sungard IFAS")) {
+					pd.setIFASDefaults(mainView.getTable());
+				}
 			}
 		};
 		mainView.getBtnPopulateTable().addActionListener(actionListener);
@@ -290,6 +296,9 @@ public class MainController {
 			public void actionPerformed(ActionEvent e) {
 				if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
 					sungardHTEOptionsView.setVisible(true);
+				}
+				else if(applicationSettings.getPayrollSystem().equals("Sungard IFAS")) {
+					sungardIFASOptionsView.setVisible(true);
 				}
 			}
 		};

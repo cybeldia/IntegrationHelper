@@ -24,6 +24,7 @@ public class QueryExecuter {
 	private PreparedStatement updateMapping = null;
 	private PreparedStatement benefitJobPS = null;
 	private PreparedStatement employeeJobPS = null;
+	private PreparedStatement departmentJobPS = null;
 
 	// Update employee build mapping
 	private String updateString = "UPDATE employee_build_mapping " + " SET host_attribute_name = ? ,"
@@ -33,6 +34,7 @@ public class QueryExecuter {
 	// Create employee job
 	private String createEmployeeJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
 			+ " VALUES(0,'net.executime.dataimport.EmployeeIntegrator', 600, 'Imports employee information from payroll', current_timestamp, 'Employee Integration', '24:00', '21:00')";
+	
 	// Create InCode jobs
 	private String setInCodeEmployeeHost = "update property set value = 'net.executime.dataimport.TylerEmployeeBuildHostInterface' where property_id = 126";
 
@@ -40,12 +42,12 @@ public class QueryExecuter {
 			+ " VALUES(0,'net.executime.dataimport.TylerBenefitBuild', 600, 'Imports benefit information from payroll', current_timestamp, 'Benefit Integration', '24:00', '23:00')";
 
 	// Create HTE jobs
-	private String setHTEEmployeeHost = "update property set value = ? where property_id = 126";
+	private String setEmployeeHost = "update property set value = ? where property_id = 126";
 
-	private String createHTEDepartmentJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
-			+ " VALUES(0,'net.executime.dataimport.organizationunit.SungardHteDepartmentBuild', 600, 'Imports department information from payroll', current_timestamp, 'Department Integration', '24:00', '20:00')";
+	private String createDepartmentJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
+			+ " VALUES(0,?, 600, 'Imports department information from payroll', current_timestamp, 'Department Integration', '24:00', '20:00')";
 
-	private String createHTEBenefitJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
+	private String createBenefitJob = "INSERT INTO scheduled_job (active, class_name, deadlock_timeout, description, modification_timestamp, name, repeat_interval, start_time) "
 			+ " VALUES(0,?, 600, 'Imports benefit information from payroll', current_timestamp, 'Benefit Integration', '24:00', '22:00')";
 
 	// Configure default admin properties
@@ -101,7 +103,7 @@ public class QueryExecuter {
 	}
 
 	public void createScheduledJobs() throws Exception {
-		
+
 		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
@@ -110,13 +112,26 @@ public class QueryExecuter {
 				conn.prepareStatement(setInCodeEmployeeHost).execute();
 				conn.prepareStatement(createInCodeBenefitJob).execute();
 			} else if (applicationSettings.getPayrollSystem().equals("Sungard HTE")) {
-				benefitJobPS = conn.prepareStatement(createHTEBenefitJob);
+				benefitJobPS = conn.prepareStatement(createBenefitJob);
 				benefitJobPS.setString(1, applicationSettings.getBenefitJob());
-				employeeJobPS = conn.prepareStatement(setHTEEmployeeHost);
+				employeeJobPS = conn.prepareStatement(setEmployeeHost);
 				employeeJobPS.setString(1, applicationSettings.getEmployeeJob());
-				conn.prepareStatement(createHTEDepartmentJob).execute();
+				departmentJobPS = conn.prepareStatement(createDepartmentJob);
+				departmentJobPS.setString(1, "net.executime.dataimport.organizationunit.SungardHteDepartmentBuild");
 				benefitJobPS.executeUpdate();
 				employeeJobPS.executeUpdate();
+				departmentJobPS.executeUpdate();
+			}
+			else if (applicationSettings.getPayrollSystem().equals("Sungard IFAS")) {
+				benefitJobPS = conn.prepareStatement(createBenefitJob);
+				benefitJobPS.setString(1, applicationSettings.getBenefitJob());
+				employeeJobPS = conn.prepareStatement(setEmployeeHost);
+				employeeJobPS.setString(1, applicationSettings.getEmployeeJob());
+				departmentJobPS = conn.prepareStatement(createDepartmentJob);
+				departmentJobPS.setString(1, applicationSettings.getDepartmentJob());
+				benefitJobPS.executeUpdate();
+				employeeJobPS.executeUpdate();
+				departmentJobPS.executeUpdate();
 			}
 			conn.commit();
 		} catch (SQLException e) {
@@ -128,7 +143,6 @@ public class QueryExecuter {
 
 	public CachedRowSet getCurrentMapping() throws Exception {
 
-		
 		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
@@ -144,7 +158,7 @@ public class QueryExecuter {
 	}
 
 	public void executeAdminProperties() throws Exception {
-		
+
 		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
@@ -163,7 +177,7 @@ public class QueryExecuter {
 	}
 
 	public void cleanUpLocations() throws Exception {
-	
+
 		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);
@@ -178,7 +192,7 @@ public class QueryExecuter {
 	}
 
 	public void setupOrgUnits() throws Exception {
-		
+
 		Connection conn = xmlToDBConnection.DBConnection(applicationSettings.getDatabaseTextField());
 		try {
 			conn.setAutoCommit(false);

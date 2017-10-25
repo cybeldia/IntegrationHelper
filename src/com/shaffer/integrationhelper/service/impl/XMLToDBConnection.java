@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import com.shaffer.integrationhelper.model.ApplicationSettings;
 import com.shaffer.integrationhelper.model.v4DataSource;
-import com.shaffer.integrationhelper.model.v5DataSource;
 
 @Component
 public class XMLToDBConnection {
@@ -42,25 +41,27 @@ public class XMLToDBConnection {
 		else if (applicationSettings.getVersion().equals("5.x")) {
 			File source = new File(filePath);
 
-			
-	        SAXReader reader = new SAXReader();
-	        Document document = reader.read(filePath);
-	        
-	    
-	        Node connectionURLNode = document.selectSingleNode("/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]/*[name()='datasources']/*[name()='datasource']/*[name()='connection-url']");
-	        String connectionURL = connectionURLNode.getStringValue();
-	        
-	        Node driverClassNode = document.selectSingleNode("/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]//*[name()='drivers']/*[name()='driver']/*[name()='driver-class']");
-	        String driverClass = driverClassNode.getStringValue();
-	        
-	        Node usernameNode = document.selectSingleNode("/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]/*[name()='datasources']/*[name()='datasource']/*[name()='security']/*[name()='user-name']");
-	        String username = usernameNode.getStringValue();
-	        
-	        Node passwordNode = document.selectSingleNode("/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]/*[name()='datasources']/*[name()='datasource']/*[name()='security']/*[name()='password']");
-	        String password = passwordNode.getStringValue();
-	        
-	        Class.forName(driverClass);
-	        conn = DriverManager.getConnection(connectionURL, username, password);
+			SAXReader reader = new SAXReader();
+			Document document = reader.read(filePath);
+
+			Node connectionURLNode = document.selectSingleNode(
+					"/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]/*[name()='datasources']/*[name()='datasource']/*[name()='connection-url']");
+			String connectionURL = connectionURLNode.getStringValue();
+
+			Node driverClassNode = document.selectSingleNode(
+					"/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]//*[name()='drivers']/*[name()='driver']/*[name()='driver-class']");
+			String driverClass = driverClassNode.getStringValue();
+
+			Node usernameNode = document.selectSingleNode(
+					"/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]/*[name()='datasources']/*[name()='datasource']/*[name()='security']/*[name()='user-name']");
+			String username = usernameNode.getStringValue();
+
+			Node passwordNode = document.selectSingleNode(
+					"/*[name()='server']/*[name()='profile']/*[name()='subsystem'][4]/*[name()='datasources']/*[name()='datasource']/*[name()='security']/*[name()='password']");
+			String password = passwordNode.getStringValue();
+
+			Class.forName(driverClass);
+			conn = DriverManager.getConnection(connectionURL, username, password);
 		}
 		return conn;
 	}

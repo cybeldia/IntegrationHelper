@@ -12,6 +12,7 @@ public class PayrollDefaults {
 				tbl.setValueAt("0", row, 4);
 				tbl.setValueAt("0", row, 5);
 				tbl.setValueAt("", row, 6);
+				tbl.setValueAt("0", row, 7);
 			}
 			// Set Host Attribute values
 			tbl.setValueAt("employeeId", 1, 6);
@@ -86,6 +87,7 @@ public class PayrollDefaults {
 				tbl.setValueAt("0", row, 4);
 				tbl.setValueAt("0", row, 5);
 				tbl.setValueAt("", row, 6);
+				tbl.setValueAt("0", row, 7);
 			}
 			// Set Host Attribute values
 			tbl.setValueAt("EmployeeNumber", 1, 6);
@@ -146,6 +148,71 @@ public class PayrollDefaults {
 			// Badge ID (re-hire only)
 			tbl.setValueAt("1", 15, 5);
 			tbl.setValueAt("1", 15, 7);
+			// Status
+			tbl.setValueAt("1", 21, 4);
+			tbl.setValueAt("1", 21, 5);
+			tbl.setValueAt("1", 21, 7);
+		}
+		return tbl;
+	}
+	
+	public JTable setIFASDefaults(JTable tbl) {
+
+		if ((tbl.getRowCount() > 0) && (tbl.getColumnCount() > 0)) {
+			// Clear old values
+			for (int row = 0; row < tbl.getRowCount(); row++) {
+				tbl.setValueAt("0", row, 4);
+				tbl.setValueAt("0", row, 5);
+				tbl.setValueAt("", row, 6);
+				tbl.setValueAt("0", row, 7);
+			}
+			// Set Host Attribute values
+			
+			tbl.setValueAt("LastName", 2, 6);
+			tbl.setValueAt("FirstName", 3, 6);
+			tbl.setValueAt("PhoneNumber", 4, 6);
+			tbl.setValueAt("EmailAddress", 5, 6);
+			tbl.setValueAt("FirstInitLastName", 6, 6);
+			tbl.setValueAt("UniqueId", 7, 6);
+			tbl.setValueAt("PayCycle", 8, 6);
+			tbl.setValueAt("division", 9, 6);
+			tbl.setValueAt("employeeType", 10, 6);
+			tbl.setValueAt("FirstInitLastName", 11, 6);
+			tbl.setValueAt("Status", 21, 6);
+
+
+			// Set Update Flags and Host attribute type
+			// Last Name
+			tbl.setValueAt("1", 2, 4);
+			tbl.setValueAt("1", 2, 5);
+			tbl.setValueAt("1", 2, 7);
+			// First Name
+			tbl.setValueAt("1", 3, 4);
+			tbl.setValueAt("1", 3, 5);
+			tbl.setValueAt("1", 3, 7);
+			// Phone Number
+			tbl.setValueAt("1", 4, 4);
+			tbl.setValueAt("1", 4, 5);
+			tbl.setValueAt("1", 4, 7);
+			// Password
+			tbl.setValueAt("1", 6, 7);
+			// Unique ID
+			tbl.setValueAt("1", 7, 7);
+			// Pay Cycle
+			tbl.setValueAt("1", 8, 4);
+			tbl.setValueAt("1", 8, 5);
+			tbl.setValueAt("1", 8, 7);
+			// Department
+			tbl.setValueAt("1", 9, 4);
+			tbl.setValueAt("1", 9, 5);
+			tbl.setValueAt("1", 9, 7);
+			// Employee Type
+			tbl.setValueAt("1", 10, 4);
+			tbl.setValueAt("1", 10, 5);
+			tbl.setValueAt("1", 10, 7);
+			// Login (re-hire only)
+			tbl.setValueAt("1", 11, 5);
+			tbl.setValueAt("1", 11, 7);
 			// Status
 			tbl.setValueAt("1", 21, 4);
 			tbl.setValueAt("1", 21, 5);
