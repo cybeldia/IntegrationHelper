@@ -31,8 +31,6 @@ public class InCodeProcessor implements ApplicationEventPublisherAware {
 		int expectedColumnCount = 85;
 		String csvFileName = filePath;
 		if (expectedColumnCount == headerCount(csvFileName)) {
-			// Parse Csv into list of employees, later a new class will need to made that
-			// inherits from employee called InCode employee
 			List<InCodeEmployee> list = new CsvToBeanBuilder<InCodeEmployee>(new FileReader(csvFileName))
 					.withType(InCodeEmployee.class).withThrowExceptions(true).withIgnoreLeadingWhiteSpace(true)
 					.withVerifyReader(true).build().parse();
